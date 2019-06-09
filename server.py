@@ -17,6 +17,11 @@ def handle_dream(dream):
     DREAMS.append(dream)
     emit('dreams', DREAMS, broadcast=True)
     
+@socketio.on('disconnect') 
+def handle_disconnect():
+    DREAMS.append('Déconnexion')
+    emit('dreams', DREAMS, broadcast=True)
     
+
 if __name__ == '__main__':
     socketio.run(app)
