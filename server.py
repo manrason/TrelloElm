@@ -17,6 +17,6 @@ def handle_dream(dream):
     DREAMS.append(dream)
     emit('dreams', DREAMS, broadcast=True)
     
-
+    
 if __name__ == '__main__':
     socketio.run(app)
