@@ -13,10 +13,9 @@ def hello():
 DREAMS = []
 
 @socketio.on('dream')
-def handle_dream(json):
-    DREAMS.append(json['dream'])
-    print(json)
-    emit('dream', DREAMS)
+def handle_dream(dream):
+    DREAMS.append(dream)
+    emit('dreams', DREAMS, broadcast=True)
     
 
 if __name__ == '__main__':
