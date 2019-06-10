@@ -6,7 +6,7 @@ import Html.Events exposing (onClick)
 
 
 type alias Model =
-    { count : Int }
+    { messages : List String }
 
 
 initialModel : Model
