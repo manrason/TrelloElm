@@ -14,7 +14,7 @@
       "include": [
         "\\.elm$",
         "\\.py$",
-        "^start\\.sh"
+        "^sh/start\\.sh"
       ]
     },
     "throttle": 1000
