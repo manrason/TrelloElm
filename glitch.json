@@ -12,6 +12,7 @@
     },
     "restart": {
       "include": [
+        "\\.elm$",
         "\\.py$",
         "^start\\.sh"
       ]
