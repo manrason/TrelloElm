@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (..)
 import Html.Events exposing (onClick)
 
 
@@ -11,31 +11,23 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { count = 0 }
+    { messages = [] }
 
 
 type Msg
-    = Increment
-    | Decrement
+    = NewMessage String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            { model | count = model.count + 1 }
-
-        Decrement ->
-            { model | count = model.count - 1 }
-
+        NewMessage newMsg ->
+            { model | messages = newMsg :: model.messages}
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ button [ onClick Increment ] [ text "+1" ]
-        , div [] [ text <| String.fromInt model.count ]
-        , button [ onClick Decrement ] [ text "-1" ]
-        ]
+    ul []
+      (List.map (li [] << List.singleton << text ) model.messages)
 
 
 main : Program () Model Msg
