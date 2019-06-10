@@ -4,9 +4,9 @@ import Browser
 import Html exposing (..)
 import Html.Events exposing (onClick)
 
-port sendMsg : String -> Cmd msg
+port receiveMsg : String -> Cmd msg
 
-port receiveMsg : (String -> msg) -> Sub msg
+port sendMsg : (String -> msg) -> Sub msg
 
 type alias Model =
     { messages : List String }
@@ -22,13 +22,16 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-  receiveMsg NewMessage
+  sendMsg NewMessage
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         NewMessage newMsg ->
-            ({ model | messages = newMsg :: model.messages}, Cmd.none)
+          let 
+            _ = Debug.log "msg" newMsg
+          in
+          ({ model | messages = newMsg :: model.messages}, Cmd.none)
 
 view : Model -> Html Msg
 view model =

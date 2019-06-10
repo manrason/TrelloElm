@@ -4790,18 +4790,20 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 		}
 	});
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$receiveMsg = _Platform_incomingPort('receiveMsg', elm$json$Json$Decode$string);
+var author$project$Main$sendMsg = _Platform_incomingPort('sendMsg', elm$json$Json$Decode$string);
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
 var author$project$Main$subscriptions = function (_n0) {
-	return author$project$Main$receiveMsg(author$project$Main$NewMessage);
+	return author$project$Main$sendMsg(author$project$Main$NewMessage);
 };
+var elm$core$Debug$log = _Debug_log;
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var newMsg = msg.a;
+		var _n1 = A2(elm$core$Debug$log, 'msg', newMsg);
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,

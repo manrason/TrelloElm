@@ -12,13 +12,20 @@ def hello():
 
 DREAMS = []
 
+@socketio.on('connect')
+def handle_dream():
+    print("connection")
+    emit('dream', 'Connexion', broadcast=True)
+
+
+
 @socketio.on('dream')
 def handle_dream(dream):
     emit('dream', dream, broadcast=True)
     
 @socketio.on('disconnect') 
 def handle_disconnect():
-    emit('dream', 'Déconexion!', broadcast=True)
+    emit('dream', 'Déconnexion!', broadcast=True)
     
 
 if __name__ == '__main__':

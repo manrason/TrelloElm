@@ -1,3 +1,3 @@
-elm make src/Main.elm --output public/elm.js
+elm make src/Main.elm --output static/elm.js
 
 PYTHONUNBUFFERED=true python3 server.py

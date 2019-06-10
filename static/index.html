@@ -15,26 +15,17 @@
     </button>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
-        var app = Elm.Main.init({ node: document.querySelector('#app') })
+        var app = Elm.Main.init({ node: document.querySelector('#app')})
         
         var socket = io();
-        var appView = document.querySelector("#app");
+      
         socket.on('connect', function() {          
           socket.emit('dream', 'Fly in Python');
         });
       
-        socket.on('dreams', function(dream){
-          var ul = document.createElement("ul");
-          dreams.forEach(function(dream){
-            var li = document.createElement("li");
-            li.appendChild(document.createTextNode(dream));
-            ul.appendChild(li);
-          });
-          
-          
-          // appView.innerHTML ='';
-          // appView.appendChild(ul);
-          
+        socket.on('dream', function(dream){
+          console.log(dream);
+          app.ports.receiveMsg.send(dream);
         })
     </script>
   </body>
