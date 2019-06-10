@@ -18,6 +18,9 @@ def login():
 
 @socketio.on('connect')
 def handle_dream():
+    if 'login' not in session :
+        raise ConnectionRefusedError('unauthorized!')
+
     emit('dream', 'Connexion de ' + session['login'], broadcast=True)
 
 
@@ -31,4 +34,4 @@ def handle_disconnect():
     
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, debug=True)
