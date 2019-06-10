@@ -4390,7 +4390,7 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Main$initialModel = {currentMessage: '', messages: _List_Nil};
+var author$project$Main$initialModel = {currentDream: '', dreams: _List_Nil};
 var author$project$Main$NewMessage = function (a) {
 	return {$: 'NewMessage', a: a};
 };
@@ -4790,12 +4790,12 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 		}
 	});
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$sendMsg = _Platform_incomingPort('sendMsg', elm$json$Json$Decode$string);
+var author$project$Main$sendDream = _Platform_incomingPort('sendDream', elm$json$Json$Decode$string);
 var author$project$Main$subscriptions = function (_n0) {
-	return author$project$Main$sendMsg(author$project$Main$NewMessage);
+	return author$project$Main$sendDream(author$project$Main$NewMessage);
 };
 var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$receiveMsg = _Platform_outgoingPort('receiveMsg', elm$json$Json$Encode$string);
+var author$project$Main$receiveDream = _Platform_outgoingPort('receiveDream', elm$json$Json$Encode$string);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
@@ -4807,7 +4807,7 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							messages: A2(elm$core$List$cons, newMsg, model.messages)
+							dreams: A2(elm$core$List$cons, newMsg, model.dreams)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateMessage':
@@ -4815,14 +4815,14 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{currentMessage: s}),
+						{currentDream: s}),
 					elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{currentMessage: ''}),
-					author$project$Main$receiveMsg(model.currentMessage));
+						{currentDream: ''}),
+					author$project$Main$receiveDream(model.currentDream));
 		}
 	});
 var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
@@ -5014,7 +5014,7 @@ var author$project$Main$view = function (model) {
 							elm$html$Html$li(_List_Nil),
 							elm$core$List$singleton),
 						elm$html$Html$text),
-					model.messages)),
+					model.dreams)),
 				A2(
 				elm$html$Html$form,
 				_List_fromArray(
@@ -5029,7 +5029,7 @@ var author$project$Main$view = function (model) {
 							[
 								elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
 								elm$html$Html$Attributes$placeholder('Nouveau message...'),
-								elm$html$Html$Attributes$value(model.currentMessage)
+								elm$html$Html$Attributes$value(model.currentDream)
 							]),
 						_List_Nil)
 					]))
