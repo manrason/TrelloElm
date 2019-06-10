@@ -14,7 +14,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { messages = [] }
+    { messages = Debug.log "init" [] }
 
 
 type Msg
