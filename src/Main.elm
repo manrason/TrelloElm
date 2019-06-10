@@ -3,7 +3,7 @@ port module Main exposing (main)
 import Browser
 import Html exposing (..)
 import Html.Attributes as Attributes
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (onClick, onInput, onSubmit)
 
 port receiveMsg : String -> Cmd msg
 
@@ -37,7 +37,7 @@ update msg model =
           ({model | currentMessage = s}, Cmd.none)
         
         SubmitCurrentMessage ->
-          ({model | currentMessage = })
+          ({model | currentMessage = ""}, receiveMsg model.currentMessage)
         
 
 view : Model -> Html Msg
@@ -46,7 +46,7 @@ view model =
     [ ul []
        (List.map (li [] << List.singleton << text ) model.messages)
     , form [onSubmit SubmitCurrentMessage] 
-        [input [ onInput UpdateMessage, Attributes.placeholder "Nouveau message..."] []]
+        [input [ onInput UpdateMessage, Attributes.placeholder "Nouveau message...", Attributes.value model.currentMessage] []]
     ]
 
 main : Program () Model Msg

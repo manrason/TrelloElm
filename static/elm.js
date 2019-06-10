@@ -4794,28 +4794,38 @@ var author$project$Main$sendMsg = _Platform_incomingPort('sendMsg', elm$json$Jso
 var author$project$Main$subscriptions = function (_n0) {
 	return author$project$Main$sendMsg(author$project$Main$NewMessage);
 };
+var elm$json$Json$Encode$string = _Json_wrap;
+var author$project$Main$receiveMsg = _Platform_outgoingPort('receiveMsg', elm$json$Json$Encode$string);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'NewMessage') {
-			var newMsg = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						messages: A2(elm$core$List$cons, newMsg, model.messages)
-					}),
-				elm$core$Platform$Cmd$none);
-		} else {
-			var s = msg.a;
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{currentMessage: s}),
-				elm$core$Platform$Cmd$none);
+		switch (msg.$) {
+			case 'NewMessage':
+				var newMsg = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							messages: A2(elm$core$List$cons, newMsg, model.messages)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'UpdateMessage':
+				var s = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{currentMessage: s}),
+					elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{currentMessage: ''}),
+					author$project$Main$receiveMsg(model.currentMessage));
 		}
 	});
+var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
 var author$project$Main$UpdateMessage = function (a) {
 	return {$: 'UpdateMessage', a: a};
 };
@@ -4916,12 +4926,12 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	}
 };
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$form = _VirtualDom_node('form');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -4930,6 +4940,7 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -4963,6 +4974,28 @@ var elm$html$Html$Events$onInput = function (tagger) {
 			elm$html$Html$Events$alwaysStop,
 			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
+var elm$html$Html$Events$alwaysPreventDefault = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 'MayPreventDefault', a: a};
+};
+var elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var elm$html$Html$Events$onSubmit = function (msg) {
+	return A2(
+		elm$html$Html$Events$preventDefaultOn,
+		'submit',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysPreventDefault,
+			elm$json$Json$Decode$succeed(msg)));
+};
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -4983,13 +5016,23 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$text),
 					model.messages)),
 				A2(
-				elm$html$Html$input,
+				elm$html$Html$form,
 				_List_fromArray(
 					[
-						elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
-						elm$html$Html$Attributes$placeholder('Nouveau message...')
+						elm$html$Html$Events$onSubmit(author$project$Main$SubmitCurrentMessage)
 					]),
-				_List_Nil)
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$input,
+						_List_fromArray(
+							[
+								elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
+								elm$html$Html$Attributes$placeholder('Nouveau message...'),
+								elm$html$Html$Attributes$value(model.currentMessage)
+							]),
+						_List_Nil)
+					]))
 			]));
 };
 var elm$browser$Browser$External = function (a) {
