@@ -20,6 +20,7 @@
           console.log("hey");
           socket.emit('dream', 'Fly in Python');
         });
+      
         socket.on('dreams', function(dreams){
           var ul = document.createElement("ul");
           dreams.forEach(function(dream){

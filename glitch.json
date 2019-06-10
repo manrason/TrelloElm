@@ -1,6 +1,6 @@
 {
-  "install": "enable-npm && pip3 install --user -r requirements.txt && npm install -g elm",
-  "start": "npm run 'elm make src/Main.elm --output public/elm.js' && PYTHONUNBUFFERED=true python3 server.py",
+  "install": "pip3 install --upgrade pip && pip3 install --user -r requirements.txt",
+  "start": "PYTHONUNBUFFERED=true python3 server.py",
   "watch": {
     "ignore": [
       "\\.pyc$"
@@ -19,4 +19,5 @@
     "throttle": 1000
   }
 }
+
 

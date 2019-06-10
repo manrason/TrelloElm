@@ -19,7 +19,7 @@ def handle_dream(dream):
     
 @socketio.on('disconnect') 
 def handle_disconnect():
-    DREAMS.append('Déconnexion')
+    DREAMS.append('Déconnexioon')
     emit('dreams', DREAMS, broadcast=True)
     
 
