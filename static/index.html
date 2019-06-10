@@ -4,7 +4,7 @@
     <title>Welcome to Glitch!</title>
     <meta name="description" content="WS tests">
     <meta charset="utf-8">
-    <script src="public/elm.js"></script>
+    <script src="static/elm.js"></script>
   </head>
   <body>
     <div id="app">
@@ -23,7 +23,7 @@
           socket.emit('dream', 'Fly in Python');
         });
       
-        socket.on('dreams', function(dreams){
+        socket.on('dreams', function(dream){
           var ul = document.createElement("ul");
           dreams.forEach(function(dream){
             var li = document.createElement("li");

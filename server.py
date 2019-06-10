@@ -14,13 +14,11 @@ DREAMS = []
 
 @socketio.on('dream')
 def handle_dream(dream):
-    DREAMS.append(dream + 'poj')
-    emit('dreams', DREAMS, broadcast=True)
+    emit('dream', dream, broadcast=True)
     
 @socketio.on('disconnect') 
 def handle_disconnect():
-    DREAMS.append('Déconnexion!')
-    emit('dreams', DREAMS, broadcast=True)
+    emit('dream', 'Déconexion!', broadcast=True)
     
 
 if __name__ == '__main__':
