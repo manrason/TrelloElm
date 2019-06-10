@@ -18,15 +18,12 @@ def login():
 
 @socketio.on('connect')
 def handle_dream():
-    print("hello")
-    emit('dream', 'Connexion', broadcast=True)
+    emit('dream', 'Connexion de ' + session['login'], broadcast=True)
 
-print("oij")
 
 @socketio.on('dream')
 def handle_dream(dream):
-    print("oi")
-    emit('dream', dream, broadcast=True)
+    emit('dream', session['login'] + ": " + dream, broadcast=True)
     
 @socketio.on('disconnect') 
 def handle_disconnect():
