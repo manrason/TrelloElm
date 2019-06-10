@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, request, session
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -18,12 +18,14 @@ def login():
 
 @socketio.on('connect')
 def handle_dream():
+    print("hello")
     emit('dream', 'Connexion', broadcast=True)
 
-
+print("oij")
 
 @socketio.on('dream')
 def handle_dream(dream):
+    print("oi")
     emit('dream', dream, broadcast=True)
     
 @socketio.on('disconnect') 
