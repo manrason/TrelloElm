@@ -19,7 +19,6 @@ def login():
 def logout():
     try:
         login = session.pop('login')
-        print(login)
         socketio.emit('dream', login + ' logged out', broadcast=True)
         return "logged out"
     except KeyError:
