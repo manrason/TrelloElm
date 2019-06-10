@@ -16,12 +16,12 @@
         
         var socket = io();
       
-        app.ports.receiveMsg.subscribe(function(dream){
+        app.ports.elmToJs.subscribe(function(dream){
           socket.emit('dream', dream);
         })
       
         socket.on('dream', function(dream){
-          app.ports.sendMsg.send(dream);
+          app.ports.jsToElm.send(dream);
         })
     </script>
   </body>

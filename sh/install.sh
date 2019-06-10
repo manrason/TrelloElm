@@ -17,13 +17,14 @@ else
    echo "Elm seems already installed!"
 fi
 
-echo ""
-if [ ! -f "/app/.local/bin/elm-format" ]; then
-   echo "Elm-form doesn't seem installed, I'm downloading it..."
-   cd /app/.local/bin/
-   
-   curl --silent -L $elmformat_bin_url  | tar xz
-   echo "elm-format installed!"
-else
-   echo "elm-format seems already installed!"
-fi
+# experiment for using elm-format but it does not play well with glitch (need to "refresh" after each elm-format...)
+#echo ""
+#if [ ! -f "/app/.local/bin/elm-format" ]; then
+#   echo "Elm-form doesn't seem installed, I'm downloading it..."
+#   cd /app/.local/bin/
+#   
+#   curl --silent -L $elmformat_bin_url  | tar xz
+#   echo "elm-format installed!"
+#else
+#   echo "elm-format seems already installed!"
+#fi

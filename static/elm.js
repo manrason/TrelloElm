@@ -4790,12 +4790,12 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 		}
 	});
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$sendDream = _Platform_incomingPort('sendDream', elm$json$Json$Decode$string);
+var author$project$Main$jsToElm = _Platform_incomingPort('jsToElm', elm$json$Json$Decode$string);
 var author$project$Main$subscriptions = function (_n0) {
-	return author$project$Main$sendDream(author$project$Main$NewMessage);
+	return author$project$Main$jsToElm(author$project$Main$NewMessage);
 };
 var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$receiveDream = _Platform_outgoingPort('receiveDream', elm$json$Json$Encode$string);
+var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$json$Json$Encode$string);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
@@ -4822,7 +4822,7 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{currentDream: ''}),
-					author$project$Main$receiveDream(model.currentDream));
+					author$project$Main$elmToJs(model.currentDream));
 		}
 	});
 var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
