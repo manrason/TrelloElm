@@ -5003,19 +5003,6 @@ var author$project$Main$view = function (model) {
 		_List_fromArray(
 			[
 				A2(
-				elm$html$Html$ul,
-				_List_Nil,
-				A2(
-					elm$core$List$map,
-					A2(
-						elm$core$Basics$composeL,
-						A2(
-							elm$core$Basics$composeL,
-							elm$html$Html$li(_List_Nil),
-							elm$core$List$singleton),
-						elm$html$Html$text),
-					model.dreams)),
-				A2(
 				elm$html$Html$form,
 				_List_fromArray(
 					[
@@ -5032,7 +5019,20 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$Attributes$value(model.currentDream)
 							]),
 						_List_Nil)
-					]))
+					])),
+				A2(
+				elm$html$Html$ul,
+				_List_Nil,
+				A2(
+					elm$core$List$map,
+					A2(
+						elm$core$Basics$composeL,
+						A2(
+							elm$core$Basics$composeL,
+							elm$html$Html$li(_List_Nil),
+							elm$core$List$singleton),
+						elm$html$Html$text),
+					model.dreams))
 			]));
 };
 var elm$browser$Browser$External = function (a) {

@@ -1,3 +1,5 @@
-elm make src/Main.elm --output static/elm.js
+elm_build="elm make src/Main.elm --output static/elm.js"
+launch_python="python3 server.py"
+PYTHONUNBUFFERED=true
 
-#PYTHONUNBUFFERED=true python3 server.py
+$elm_build && $launch_python

@@ -10,11 +10,14 @@ socketio = SocketIO(app)
 def hello():
   return send_from_directory('static', 'index.html')
 
-DREAMS = []
+@app.route("/login", methods=['POST'])
+def login():
+    session['login'] = request.json['login']
+    return "logged in as " + session['login']
+
 
 @socketio.on('connect')
 def handle_dream():
-    print("connection")
     emit('dream', 'Connexion', broadcast=True)
 
 

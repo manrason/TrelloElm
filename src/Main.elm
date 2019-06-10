@@ -48,9 +48,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ ul [] <|
-            List.map (li [] << List.singleton << text) model.dreams
-        , form [ onSubmit SubmitCurrentMessage ]
+        [ form [ onSubmit SubmitCurrentMessage ]
             [ input
                 [ onInput UpdateMessage
                 , Attributes.placeholder "Nouveau message..."
@@ -58,6 +56,8 @@ view model =
                 ]
                 []
             ]
+        , ul [] <|
+            List.map (li [] << List.singleton << text) model.dreams
         ]
 
 
