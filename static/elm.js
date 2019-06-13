@@ -4392,11 +4392,17 @@ var elm$core$Set$toList = function (_n0) {
 };
 var author$project$Main$initialModel = {currentDream: '', events: _List_Nil};
 var author$project$Main$NoOp = {$: 'NoOp'};
-var author$project$Main$Loggout = function (a) {
-	return {$: 'Loggout', a: a};
+var author$project$Main$EDream = function (a) {
+	return {$: 'EDream', a: a};
 };
-var author$project$Main$NewDream = function (a) {
-	return {$: 'NewDream', a: a};
+var author$project$Main$ELoggout = function (a) {
+	return {$: 'ELoggout', a: a};
+};
+var author$project$Main$ELogin = function (a) {
+	return {$: 'ELogin', a: a};
+};
+var author$project$Main$NewEvent = function (a) {
+	return {$: 'NewEvent', a: a};
 };
 var author$project$Main$Dream = F2(
 	function (from, content) {
@@ -4823,25 +4829,36 @@ var elm$core$Basics$always = F2(
 	});
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$oneOf = _Json_oneOf;
-var author$project$Main$decodeExternalMessage = elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2(
-			elm$json$Json$Decode$map,
-			author$project$Main$NewDream,
-			A2(
-				elm$json$Json$Decode$andThen,
-				elm$core$Basics$always(author$project$Main$decodeDream),
-				A2(author$project$Main$expectStringAt, 'tag', 'dream'))),
-			A2(
-			elm$json$Json$Decode$map,
-			author$project$Main$Loggout,
-			A2(
-				elm$json$Json$Decode$andThen,
-				elm$core$Basics$always(
-					A2(elm$json$Json$Decode$field, 'login', elm$json$Json$Decode$string)),
-				A2(author$project$Main$expectStringAt, 'tag', 'loggout')))
-		]));
+var author$project$Main$decodeExternalMessage = A2(
+	elm$json$Json$Decode$map,
+	author$project$Main$NewEvent,
+	elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				A2(
+				elm$json$Json$Decode$map,
+				author$project$Main$EDream,
+				A2(
+					elm$json$Json$Decode$andThen,
+					elm$core$Basics$always(author$project$Main$decodeDream),
+					A2(author$project$Main$expectStringAt, 'tag', 'dream'))),
+				A2(
+				elm$json$Json$Decode$map,
+				author$project$Main$ELogin,
+				A2(
+					elm$json$Json$Decode$andThen,
+					elm$core$Basics$always(
+						A2(elm$json$Json$Decode$field, 'login', elm$json$Json$Decode$string)),
+					A2(author$project$Main$expectStringAt, 'tag', 'login'))),
+				A2(
+				elm$json$Json$Decode$map,
+				author$project$Main$ELoggout,
+				A2(
+					elm$json$Json$Decode$andThen,
+					elm$core$Basics$always(
+						A2(elm$json$Json$Decode$field, 'login', elm$json$Json$Decode$string)),
+					A2(author$project$Main$expectStringAt, 'tag', 'loggout')))
+			])));
 var elm$json$Json$Decode$value = _Json_decodeValue;
 var author$project$Main$jsToElm = _Platform_incomingPort('jsToElm', elm$json$Json$Decode$value);
 var elm$core$Basics$composeR = F3(
@@ -4866,12 +4883,6 @@ var author$project$Main$subscriptions = function (_n0) {
 			elm$json$Json$Decode$decodeValue(author$project$Main$decodeExternalMessage),
 			elm$core$Result$withDefault(author$project$Main$NoOp)));
 };
-var author$project$Main$EDream = function (a) {
-	return {$: 'EDream', a: a};
-};
-var author$project$Main$ELoggout = function (a) {
-	return {$: 'ELoggout', a: a};
-};
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$json$Json$Encode$string);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -4879,28 +4890,13 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'NewDream':
-				var dream = msg.a;
+			case 'NewEvent':
+				var event = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							events: A2(
-								elm$core$List$cons,
-								author$project$Main$EDream(dream),
-								model.events)
-						}),
-					elm$core$Platform$Cmd$none);
-			case 'Loggout':
-				var login = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							events: A2(
-								elm$core$List$cons,
-								author$project$Main$ELoggout(login),
-								model.events)
+							events: A2(elm$core$List$cons, event, model.events)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateMessage':
@@ -4945,37 +4941,50 @@ var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
 var author$project$Main$viewEvent = function (event) {
-	if (event.$ === 'EDream') {
-		var dream = event.a;
-		return A2(
-			elm$html$Html$span,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$span,
-					_List_fromArray(
-						[
-							A2(elm$html$Html$Attributes$style, 'font-weight', 'bold')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text(dream.from + ' : ')
-						])),
-					elm$html$Html$text(dream.content)
-				]));
-	} else {
-		var login = event.a;
-		return A2(
-			elm$html$Html$span,
-			_List_fromArray(
-				[
-					A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
-				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text(login + ' s\'e')
-				]));
+	switch (event.$) {
+		case 'EDream':
+			var dream = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-weight', 'bold')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(dream.from + ' : ')
+							])),
+						elm$html$Html$text(dream.content)
+					]));
+		case 'ELogin':
+			var login = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(login + ' s\'est connecté sur le serveur, bienvenue!')
+					]));
+		default:
+			var login = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(login + ' s\'est déconnecté du serveur... Bye bye!')
+					]));
 	}
 };
 var elm$core$Basics$composeL = F3(

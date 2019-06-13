@@ -19,7 +19,7 @@ def login():
 def logout():
     try:
         login = session.pop('login')
-        emit('event', {
+        socketio.emit('event', {
           "tag": "loggout",
           "login": session['login'],
         }, broadcast=True)

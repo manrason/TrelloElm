@@ -13,8 +13,8 @@ port jsToElm : (Value -> msg) -> Sub msg
 
 type Event
     = EDream Dream
+    | ELogin String
     | ELoggout String
-    
 
 type alias Model =
     { events : List Event, currentDream : String }
@@ -28,8 +28,7 @@ initialModel =
 
 
 type Msg
-    = NewDream Dream
-    | Loggout String
+    = NewEvent Event
     | UpdateMessage String
     | SubmitCurrentMessage
     | NoOp
@@ -47,10 +46,11 @@ expectStringAt field expected =
 decodeExternalMessage : Decoder Msg
 decodeExternalMessage =
     Decode.oneOf 
-        [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map NewDream
-        , expectStringAt "tag" "loggout" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map Loggout
+        [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map EDream
+        , expectStringAt "tag" "login" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map ELogin
+        , expectStringAt "tag" "loggout" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map ELoggout
         ]
-
+        |> Decode.map NewEvent
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -59,12 +59,9 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewDream dream ->
-            ( { model | events = EDream dream :: model.events }, Cmd.none )
+        NewEvent event ->
+            ( { model | events = event :: model.events }, Cmd.none )
         
-        Loggout login ->
-            ({ model | events = ELoggout login :: model.events}, Cmd.none)
-
         UpdateMessage s ->
             ( { model | currentDream = s }, Cmd.none )
 
@@ -100,8 +97,11 @@ viewEvent event =
               , text dream.content
               ]
             
+        ELogin login ->
+            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est connecté sur le serveur, bienvenue!"]
+            
         ELoggout login ->
-            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté du serveur"]
+            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté du serveur... Bye bye!"]
         
     
 
