@@ -29,13 +29,25 @@ type Msg
     | UpdateMessage String
     | SubmitCurrentMessage
 
-decodeExternalMessage : Decder Msg
+expectStringAt : String -> String -> Decoder ()
+expectStringAt field expected =
+    Decode.field field Decode.string
+      |> Decode.andThen (\value ->
+          if value == expected then
+              Decode.succeed ()
+          else
+              Decode.fail <| "expected " ++ expected ++ " got " ++ value
+      )
+
+decodeExternalMessage : Decoder Msg
 decodeExternalMessage =
-    
+    Decode.oneOf 
+        [ expectStringAt "tag" "dream" |> Decode.map decodeDream]
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    jsToElm <|
-      \value ->
+    jsToElm <| Decode.decodeValue decodeExternalMessage
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -78,8 +90,8 @@ type alias Dream =
     , content: String
     }
 
-decodeDreams : Decoder Dream
-decodeDreams =
+decodeDream : Decoder Dream
+decodeDream =
     Decode.map2 Dream
         (Decode.field "from" Decode.string)
         (Decode.field "content" Decode.string)
