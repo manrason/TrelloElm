@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, request, session
+from flask import Flask, render_template, send_from_directory, request, session, jsonify
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -19,7 +19,7 @@ def login():
 def logout():
     try:
         login = session.pop('login')
-        socketio.emit('dream', login + ' logged out', broadcast=True)
+        socketio.emit('logout', login, broadcast=True)
         return "logged out"
     except KeyError:
         return "not logged in", 400
@@ -30,16 +30,21 @@ def handle_dream():
     if 'login' not in session :
         raise ConnectionRefusedError('unauthorized!')
 
-    emit('dream', 'Connexion de ' + session['login'], broadcast=True)
+    emit('user_connection', session['login'], broadcast=True)
 
 
 @socketio.on('dream')
 def handle_dream(dream):
-    emit('dream', session['login'] + ": " + dream, broadcast=True)
+    emit('dream', {
+      "from" : session['login'],
+      "content": dream
+    },
+    broadcast=True)
     
 @socketio.on('disconnect') 
 def handle_disconnect():
-    emit('dream', 'Déconnexion!', broadcast=True)
+    emit('logout', session['login'], broadcast=True)
+
     
 
 if __name__ == '__main__':

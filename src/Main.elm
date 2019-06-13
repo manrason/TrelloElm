@@ -4,16 +4,16 @@ import Browser
 import Html exposing (..)
 import Html.Attributes as Attributes
 import Html.Events exposing (onClick, onInput, onSubmit)
-
+import Json.Decode as Decode exposing(Decoder, Value)
 
 port elmToJs : String -> Cmd msg
 
 
-port jsToElm : (String -> msg) -> Sub msg
+port jsToElm : (Value -> msg) -> Sub msg
 
 
 type alias Model =
-    { dreams : List String, currentDream : String }
+    { dreams : List Dream, currentDream : String }
 
 
 initialModel : Model
@@ -21,22 +21,25 @@ initialModel =
     { dreams = [], currentDream = "" }
 
 
+
+
 type Msg
-    = NewMessage String
+    = NewDream Dream
+    | Loggout String
     | UpdateMessage String
     | SubmitCurrentMessage
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    jsToElm NewMessage
+    jsToElm NewDream
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewMessage newMsg ->
-            ( { model | dreams = newMsg :: model.dreams }, Cmd.none )
+        NewDream dream ->
+            ( { model | dreams = dream :: model.dreams }, Cmd.none )
 
         UpdateMessage s ->
             ( { model | currentDream = s }, Cmd.none )
@@ -60,6 +63,20 @@ view model =
             List.map (li [] << List.singleton << text) model.dreams
         ]
 
+
+viewDream : Dream -> Html Msg
+viewDream dream =
+    span [style "font-style" "italic"] [text ]
+type alias Dream = 
+    { from: String
+    , content: String
+    }
+
+decodeDreams : Decoder Dream
+decodeDreams =
+    Decode.map2 Dream
+        (Decode.field "from" Decode.string)
+        (Decode.field "content" Decode.string)
 
 main : Program () Model Msg
 main =
