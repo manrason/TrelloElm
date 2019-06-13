@@ -6,6 +6,8 @@ import Html.Attributes as Attributes
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Decode as Decode exposing(Decoder, Value)
 
+import Http
+
 port elmToJs : String -> Cmd msg
 
 
@@ -17,13 +19,13 @@ type Event
     | ELoggout String
 
 type Model 
-    = Awake
+    = Awake String
     | Asleep { events : List Event, currentDream : String }
 
 
 initialModel : Model
 initialModel =
-    Awake    
+    Awake ""
 
 
 
@@ -32,6 +34,7 @@ type Msg
     = NewEvent Event
     | UpdateMessage String
     | SubmitCurrentMessage
+    | SubmitLogin
     | NoOp
 
 expectStringAt : String -> String -> Decoder ()
@@ -59,32 +62,54 @@ subscriptions _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        NewEvent event ->
-            ( { model | events = event :: model.events }, Cmd.none )
-        
-        UpdateMessage s ->
-            ( { model | currentDream = s }, Cmd.none )
+    case model of
+        Asleep data ->
+            case msg of
+                NewEvent event ->
+                    ( { model | events = event :: model.events }, Cmd.none )
 
-        SubmitCurrentMessage ->
-            ( { model | currentDream = "" }, elmToJs model.currentDream )
-        
-        NoOp ->
-            (model, Cmd.none)
+                UpdateMessage s ->
+                    ( { model | currentDream = s }, Cmd.none )
 
+                SubmitCurrentMessage ->
+                    ( { model | currentDream = "" }, elmToJs model.currentDream )
+
+                _ ->
+                    (model, Cmd.none)
+        
+        Awake login ->
+            case msg of
+                UpdateLogin newLogin ->
+                    (Awake newLogin, Cmd.none)
+                
+                SubmitLogin ->
+                    (Asleep {events = [], currentDream = ""}, postLogin login )
+                
+                _ ->
+                    (model, Cmd.none)
+
+postLogin : String -> Cmd Msg
+postLogin login =
+    Http.post 
+      { url= "/login"
+      , body = Http.jsonBody }
 
 view : Model -> Html Msg
 view model =
     case model of
-        Awake ->
+        Awake currentLogin ->
             form [ onSubmit SubmitLogin ]
                   [ input
-                      [ onInput UpdateMessage
+                      [ onInput UpdateLogin
                       , Attributes.placeholder "Hello dreamer... What is your name?"
-                      , Attributes.value data.currentDream
+                      , Attributes.value currentLogin
                       ]
                       []
-                    
+                  , input 
+                      [ Attributes.type_ "submit"
+                      , Attributes.value "Fall asleep"
+                      ]
+                      []
                   ]
         Asleep data ->
           div []
