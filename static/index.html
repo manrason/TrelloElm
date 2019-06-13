@@ -20,18 +20,21 @@
           switch(event.tag){
               case "fallAsleep": 
                 socket = io();
+                socket.on('event', function(event){
+                  console.log(event);
+                  app.ports.jsToElm.send(event);
+                })
                 break;
               
               case "dream":
                 socket.emit('dream', dream);
                 break;
+              
+              default:
+                console.log("Unexpected event from Elm code:", event)
           }
-        })
-      
-        socket.on('event', function(event){
-          console.log(event);
-          app.ports.jsToElm.send(event);
-        })
+        });
+        
     </script>
   </body>
 </html>

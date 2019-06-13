@@ -5,10 +5,10 @@ import Html exposing (..)
 import Html.Attributes as Attributes
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Json.Decode as Decode exposing(Decoder, Value)
-
+import Json.Encode as Encode
 import Http
 
-port elmToJs : String -> Cmd msg
+port elmToJs : Value -> Cmd msg
 
 
 port jsToElm : (Value -> msg) -> Sub msg
@@ -34,6 +34,7 @@ type Msg
     = NewEvent Event
     | UpdateMessage String
     | SubmitCurrentMessage
+    | UpdateLogin String
     | SubmitLogin
     | NoOp
 
@@ -66,13 +67,14 @@ update msg model =
         Asleep data ->
             case msg of
                 NewEvent event ->
-                    ( { model | events = event :: model.events }, Cmd.none )
+                    ( Asleep { data | events = event :: data.events }, Cmd.none )
 
                 UpdateMessage s ->
-                    ( { model | currentDream = s }, Cmd.none )
+                    ( Asleep { data | currentDream = s }, Cmd.none )
 
                 SubmitCurrentMessage ->
-                    ( { model | currentDream = "" }, elmToJs model.currentDream )
+                    ( Asleep { data | currentDream = "" }, elmToJs 
+                      <| Encode.object [("tag", Encode.string data.currentDream )
 
                 _ ->
                     (model, Cmd.none)
@@ -92,16 +94,20 @@ postLogin : String -> Cmd Msg
 postLogin login =
     Http.post 
       { url= "/login"
-      , body = Http.jsonBody }
+      , body = Http.jsonBody <| Encode.object [("login", Encode.string login)]
+      , expect = Http.expectWhatever (\_ -> NoOp) 
+      }
 
 view : Model -> Html Msg
 view model =
     case model of
         Awake currentLogin ->
             form [ onSubmit SubmitLogin ]
-                  [ input
+                  [ text  "Hello dreamer... What is your name?"
+                  , br [] []
+                  , input
                       [ onInput UpdateLogin
-                      , Attributes.placeholder "Hello dreamer... What is your name?"
+                      , Attributes.placeholder "Who are you?"
                       , Attributes.value currentLogin
                       ]
                       []
