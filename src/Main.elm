@@ -22,7 +22,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { dreams = [], currentDream = "" }
+    { events = [], currentDream = "" }
 
 
 
@@ -47,7 +47,9 @@ expectStringAt field expected =
 decodeExternalMessage : Decoder Msg
 decodeExternalMessage =
     Decode.oneOf 
-        [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map NewDream]
+        [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map NewDream
+        , expectStringAt "tag" "loggout" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map Loggout
+        ]
 
 
 subscriptions : Model -> Sub Msg
@@ -89,17 +91,19 @@ view model =
         ]
 
 
-viewLoggout : String -> Html Msg
-viewLoggout login =
-    span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté. Bye bye!"]
+viewEvent : Event -> Html Msg
+viewEvent event =
+    case event of
+        EDream dream -> 
+            span [] 
+              [ span [Attributes.style "font-weight" "bold"] [text <| dream.from ++ " : "]
+              , text dream.content
+              ]
+            
+        ELoggout login ->
+            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté du serveur"]
+        
     
-    
-viewDream : Dream -> Html Msg
-viewDream dream =
-    span [] 
-      [ span [Attributes.style "font-style" "bold"] [text <| dream.from ++ " : "]
-      , text dream.content
-      ]
 
 type alias Dream = 
     { from: String

@@ -4390,8 +4390,11 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Main$initialModel = {currentDream: '', dreams: _List_Nil};
+var author$project$Main$initialModel = {currentDream: '', events: _List_Nil};
 var author$project$Main$NoOp = {$: 'NoOp'};
+var author$project$Main$Loggout = function (a) {
+	return {$: 'Loggout', a: a};
+};
 var author$project$Main$NewDream = function (a) {
 	return {$: 'NewDream', a: a};
 };
@@ -4829,7 +4832,15 @@ var author$project$Main$decodeExternalMessage = elm$json$Json$Decode$oneOf(
 			A2(
 				elm$json$Json$Decode$andThen,
 				elm$core$Basics$always(author$project$Main$decodeDream),
-				A2(author$project$Main$expectStringAt, 'tag', 'dream')))
+				A2(author$project$Main$expectStringAt, 'tag', 'dream'))),
+			A2(
+			elm$json$Json$Decode$map,
+			author$project$Main$Loggout,
+			A2(
+				elm$json$Json$Decode$andThen,
+				elm$core$Basics$always(
+					A2(elm$json$Json$Decode$field, 'login', elm$json$Json$Decode$string)),
+				A2(author$project$Main$expectStringAt, 'tag', 'loggout')))
 		]));
 var elm$json$Json$Decode$value = _Json_decodeValue;
 var author$project$Main$jsToElm = _Platform_incomingPort('jsToElm', elm$json$Json$Decode$value);
@@ -4855,6 +4866,12 @@ var author$project$Main$subscriptions = function (_n0) {
 			elm$json$Json$Decode$decodeValue(author$project$Main$decodeExternalMessage),
 			elm$core$Result$withDefault(author$project$Main$NoOp)));
 };
+var author$project$Main$EDream = function (a) {
+	return {$: 'EDream', a: a};
+};
+var author$project$Main$ELoggout = function (a) {
+	return {$: 'ELoggout', a: a};
+};
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$json$Json$Encode$string);
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -4868,12 +4885,24 @@ var author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							dreams: A2(elm$core$List$cons, dream, model.dreams)
+							events: A2(
+								elm$core$List$cons,
+								author$project$Main$EDream(dream),
+								model.events)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'Loggout':
 				var login = msg.a;
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							events: A2(
+								elm$core$List$cons,
+								author$project$Main$ELoggout(login),
+								model.events)
+						}),
+					elm$core$Platform$Cmd$none);
 			case 'UpdateMessage':
 				var s = msg.a;
 				return _Utils_Tuple2(
@@ -4915,24 +4944,39 @@ var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var author$project$Main$viewDream = function (dream) {
-	return A2(
-		elm$html$Html$span,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$span,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'font-style', 'bold')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(dream.from + ' : ')
-					])),
-				elm$html$Html$text(dream.content)
-			]));
+var author$project$Main$viewEvent = function (event) {
+	if (event.$ === 'EDream') {
+		var dream = event.a;
+		return A2(
+			elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$span,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$style, 'font-weight', 'bold')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text(dream.from + ' : ')
+						])),
+					elm$html$Html$text(dream.content)
+				]));
+	} else {
+		var login = event.a;
+		return A2(
+			elm$html$Html$span,
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text(login + ' s\'e')
+				]));
+	}
 };
 var elm$core$Basics$composeL = F3(
 	function (g, f, x) {
@@ -5115,8 +5159,8 @@ var author$project$Main$view = function (model) {
 							elm$core$Basics$composeL,
 							elm$html$Html$li(_List_Nil),
 							elm$core$List$singleton),
-						author$project$Main$viewDream),
-					model.dreams))
+						author$project$Main$viewEvent),
+					model.events))
 			]));
 };
 var elm$browser$Browser$External = function (a) {

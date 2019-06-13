@@ -20,8 +20,8 @@
           socket.emit('dream', dream);
         })
       
-        socket.on('dream', function(dream){
-          app.ports.jsToElm.send(dream);
+        socket.on('event', function(event){
+          app.ports.jsToElm.send(event);
         })
     </script>
   </body>

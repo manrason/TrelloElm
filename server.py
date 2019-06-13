@@ -19,7 +19,10 @@ def login():
 def logout():
     try:
         login = session.pop('login')
-        socketio.emit('logout', login, broadcast=True)
+        emit('event', {
+          "tag": "loggout",
+          "login": session['login'],
+        }, broadcast=True)
         return "logged out"
     except KeyError:
         return "not logged in", 400
@@ -30,20 +33,27 @@ def handle_dream():
     if 'login' not in session :
         raise ConnectionRefusedError('unauthorized!')
 
-    emit('user_connection', session['login'], broadcast=True)
+    emit('event', {
+      "tag": "login",
+      "login": session['login'],
+    }, broadcast=True)
 
 
 @socketio.on('dream')
 def handle_dream(dream):
-    emit('dream', {
+    emit('event', {
+      "tag": "dream",
       "from" : session['login'],
-      "content": dream
+      "content": dream,
     },
     broadcast=True)
     
 @socketio.on('disconnect') 
 def handle_disconnect():
-    emit('logout', session['login'], broadcast=True)
+    emit('event', {
+      "tag": "loggout",
+      "login": session['login'],
+    }, broadcast=True)
 
     
 
