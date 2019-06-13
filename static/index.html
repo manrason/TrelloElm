@@ -21,7 +21,6 @@
               case "fallAsleep": 
                 socket = io();
                 socket.on('event', function(event){
-                  console.log(event);
                   app.ports.jsToElm.send(event);
                 })
                 break;

@@ -20,7 +20,7 @@ port jsToElm : (Value -> msg) -> Sub msg
 type Event
     = EDream Dream
     | ELogin String
-    | ELoggout String
+    | ELogout String
 
 
 type Model
@@ -61,7 +61,7 @@ decodeExternalMessage =
     Decode.oneOf
         [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map EDream
         , expectStringAt "tag" "login" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map ELogin
-        , expectStringAt "tag" "loggout" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map ELoggout
+        , expectStringAt "tag" "logout" |> Decode.andThen (always (Decode.field "login" Decode.string)) |> Decode.map ELogout
         ]
         |> Decode.map NewEvent
 
@@ -125,38 +125,41 @@ postLogin login =
 
 view : Model -> Html Msg
 view model =
-    case model of
-        Awake currentLogin ->
-            form [ onSubmit SubmitLogin ]
-                [ text "Hello dreamer... What is your name?"
-                , br [] []
-                , input
-                    [ onInput UpdateLogin
-                    , Attributes.placeholder "Who are you?"
-                    , Attributes.value currentLogin
-                    ]
-                    []
-                , input
-                    [ Attributes.type_ "submit"
-                    , Attributes.value "Fall asleep"
-                    ]
-                    []
-                ]
+    div []
+      [ h1 [] [text "Dreams"]
+      , case model of
+          Awake currentLogin ->
+              form [ onSubmit SubmitLogin ]
+                  [ text "Hello dreamer... What is your name?"
+                  , br [] []
+                  , input
+                      [ onInput UpdateLogin
+                      , Attributes.placeholder "Who are you?"
+                      , Attributes.value currentLogin
+                      ]
+                      []
+                  , input
+                      [ Attributes.type_ "submit"
+                      , Attributes.value "Fall asleep"
+                      ]
+                      []
+                  ]
 
-        Asleep data ->
-            div []
-                [ ul [] <|
-                    List.map (li [] << List.singleton << viewEvent) data.events
-                , form [ onSubmit SubmitCurrentMessage ]
-                    [ input
-                        [ onInput UpdateMessage
-                        , Attributes.placeholder "Let me know your dreams..."
-                        , Attributes.value data.currentDream
-                        , Attributes.id "dream-input"
-                        ]
-                        []
-                    ]
-                ]
+          Asleep data ->
+              div []
+                  [ ul [] <|
+                      List.map (li [] << List.singleton << viewEvent) data.events
+                  , form [ onSubmit SubmitCurrentMessage ]
+                      [ input
+                          [ onInput UpdateMessage
+                          , Attributes.placeholder "Let me know your dreams..."
+                          , Attributes.value data.currentDream
+                          , Attributes.id "dream-input"
+                          ]
+                          []
+                      ]
+                  ]
+      ]
 
 
 viewEvent : Event -> Html Msg
@@ -171,7 +174,7 @@ viewEvent event =
         ELogin login ->
             span [ Attributes.style "font-style" "italic" ] [ text <| login ++ " fell asleep... We will know his dreams!" ]
 
-        ELoggout login ->
+        ELogout login ->
             span [ Attributes.style "font-style" "italic" ] [ text <| login ++ " awoke. We can't hear his dreams anymore." ]
 
 
