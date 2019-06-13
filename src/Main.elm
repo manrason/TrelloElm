@@ -29,11 +29,13 @@ type Msg
     | UpdateMessage String
     | SubmitCurrentMessage
 
-
+decodeExternalMessage : Decder Msg
+decodeExternalMessage =
+    
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    jsToElm NewDream
-
+    jsToElm <|
+      \value ->
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -60,13 +62,17 @@ view model =
                 []
             ]
         , ul [] <|
-            List.map (li [] << List.singleton << text) model.dreams
+            List.map (li [] << List.singleton<< viewDream) model.dreams
         ]
 
 
 viewDream : Dream -> Html Msg
 viewDream dream =
-    span [style "font-style" "italic"] [text ]
+    span [] 
+      [ span [Attributes.style "font-style" "bold"] [text <| dream.from ++ " : "]
+      , text dream.content
+      ]
+
 type alias Dream = 
     { from: String
     , content: String
