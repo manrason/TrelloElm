@@ -11,9 +11,13 @@ port elmToJs : String -> Cmd msg
 
 port jsToElm : (Value -> msg) -> Sub msg
 
+type Event
+    = EDream Dream
+    | ELoggout String
+    
 
 type alias Model =
-    { dreams : List Dream, currentDream : String }
+    { events : List Event, currentDream : String }
 
 
 initialModel : Model
@@ -28,6 +32,7 @@ type Msg
     | Loggout String
     | UpdateMessage String
     | SubmitCurrentMessage
+    | NoOp
 
 expectStringAt : String -> String -> Decoder ()
 expectStringAt field expected =
@@ -42,24 +47,30 @@ expectStringAt field expected =
 decodeExternalMessage : Decoder Msg
 decodeExternalMessage =
     Decode.oneOf 
-        [ expectStringAt "tag" "dream" |> Decode.map decodeDream]
+        [ expectStringAt "tag" "dream" |> Decode.andThen (always decodeDream) |> Decode.map NewDream]
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    jsToElm <| Decode.decodeValue decodeExternalMessage
+    jsToElm <| (Decode.decodeValue decodeExternalMessage >> Result.withDefault NoOp)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NewDream dream ->
-            ( { model | dreams = dream :: model.dreams }, Cmd.none )
+            ( { model | events = EDream dream :: model.events }, Cmd.none )
+        
+        Loggout login ->
+            ({ model | events = ELoggout login :: model.events}, Cmd.none)
 
         UpdateMessage s ->
             ( { model | currentDream = s }, Cmd.none )
 
         SubmitCurrentMessage ->
             ( { model | currentDream = "" }, elmToJs model.currentDream )
+        
+        NoOp ->
+            (model, Cmd.none)
 
 
 view : Model -> Html Msg
@@ -74,10 +85,15 @@ view model =
                 []
             ]
         , ul [] <|
-            List.map (li [] << List.singleton<< viewDream) model.dreams
+            List.map (li [] << List.singleton<< viewEvent) model.events
         ]
 
 
+viewLoggout : String -> Html Msg
+viewLoggout login =
+    span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté. Bye bye!"]
+    
+    
 viewDream : Dream -> Html Msg
 viewDream dream =
     span [] 

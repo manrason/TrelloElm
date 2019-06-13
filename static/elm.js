@@ -4391,9 +4391,14 @@ var elm$core$Set$toList = function (_n0) {
 	return elm$core$Dict$keys(dict);
 };
 var author$project$Main$initialModel = {currentDream: '', dreams: _List_Nil};
-var author$project$Main$NewMessage = function (a) {
-	return {$: 'NewMessage', a: a};
+var author$project$Main$NoOp = {$: 'NoOp'};
+var author$project$Main$NewDream = function (a) {
+	return {$: 'NewDream', a: a};
 };
+var author$project$Main$Dream = F2(
+	function (from, content) {
+		return {content: content, from: from};
+	});
 var elm$core$Array$branchFactor = 32;
 var elm$core$Array$Array_elm_builtin = F4(
 	function (a, b, c, d) {
@@ -4789,10 +4794,66 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 			}
 		}
 	});
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$jsToElm = _Platform_incomingPort('jsToElm', elm$json$Json$Decode$string);
+var author$project$Main$decodeDream = A3(
+	elm$json$Json$Decode$map2,
+	author$project$Main$Dream,
+	A2(elm$json$Json$Decode$field, 'from', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'content', elm$json$Json$Decode$string));
+var elm$json$Json$Decode$andThen = _Json_andThen;
+var elm$json$Json$Decode$fail = _Json_fail;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var author$project$Main$expectStringAt = F2(
+	function (field, expected) {
+		return A2(
+			elm$json$Json$Decode$andThen,
+			function (value) {
+				return _Utils_eq(value, expected) ? elm$json$Json$Decode$succeed(_Utils_Tuple0) : elm$json$Json$Decode$fail('expected ' + (expected + (' got ' + value)));
+			},
+			A2(elm$json$Json$Decode$field, field, elm$json$Json$Decode$string));
+	});
+var elm$core$Basics$always = F2(
+	function (a, _n0) {
+		return a;
+	});
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$oneOf = _Json_oneOf;
+var author$project$Main$decodeExternalMessage = elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			elm$json$Json$Decode$map,
+			author$project$Main$NewDream,
+			A2(
+				elm$json$Json$Decode$andThen,
+				elm$core$Basics$always(author$project$Main$decodeDream),
+				A2(author$project$Main$expectStringAt, 'tag', 'dream')))
+		]));
+var elm$json$Json$Decode$value = _Json_decodeValue;
+var author$project$Main$jsToElm = _Platform_incomingPort('jsToElm', elm$json$Json$Decode$value);
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (result.$ === 'Ok') {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var elm$json$Json$Decode$decodeValue = _Json_run;
 var author$project$Main$subscriptions = function (_n0) {
-	return author$project$Main$jsToElm(author$project$Main$NewMessage);
+	return author$project$Main$jsToElm(
+		A2(
+			elm$core$Basics$composeR,
+			elm$json$Json$Decode$decodeValue(author$project$Main$decodeExternalMessage),
+			elm$core$Result$withDefault(author$project$Main$NoOp)));
 };
 var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$json$Json$Encode$string);
@@ -4801,15 +4862,18 @@ var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'NewMessage':
-				var newMsg = msg.a;
+			case 'NewDream':
+				var dream = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							dreams: A2(elm$core$List$cons, newMsg, model.dreams)
+							dreams: A2(elm$core$List$cons, dream, model.dreams)
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'Loggout':
+				var login = msg.a;
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			case 'UpdateMessage':
 				var s = msg.a;
 				return _Utils_Tuple2(
@@ -4817,17 +4881,58 @@ var author$project$Main$update = F2(
 						model,
 						{currentDream: s}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'SubmitCurrentMessage':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{currentDream: ''}),
 					author$project$Main$elmToJs(model.currentDream));
+			default:
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
 	});
 var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
 var author$project$Main$UpdateMessage = function (a) {
 	return {$: 'UpdateMessage', a: a};
+};
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var author$project$Main$viewDream = function (dream) {
+	return A2(
+		elm$html$Html$span,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-style', 'bold')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(dream.from + ' : ')
+					])),
+				elm$html$Html$text(dream.content)
+			]));
 };
 var elm$core$Basics$composeL = F3(
 	function (g, f, x) {
@@ -4907,30 +5012,10 @@ var elm$core$List$singleton = function (value) {
 	return _List_fromArray(
 		[value]);
 };
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$form = _VirtualDom_node('form');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$li = _VirtualDom_node('li');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var elm$html$Html$ul = _VirtualDom_node('ul');
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -4955,7 +5040,6 @@ var elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
 		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
@@ -5031,7 +5115,7 @@ var author$project$Main$view = function (model) {
 							elm$core$Basics$composeL,
 							elm$html$Html$li(_List_Nil),
 							elm$core$List$singleton),
-						elm$html$Html$text),
+						author$project$Main$viewDream),
 					model.dreams))
 			]));
 };
