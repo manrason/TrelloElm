@@ -5064,8 +5064,11 @@ var author$project$Main$subscriptions = function (_n0) {
 var author$project$Main$Asleep = function (a) {
 	return {$: 'Asleep', a: a};
 };
-var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$json$Json$Encode$string);
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var author$project$Main$elmToJs = _Platform_outgoingPort('elmToJs', elm$core$Basics$identity);
+var author$project$Main$Connected = {$: 'Connected'};
 var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
 var elm$core$Basics$compare = _Utils_compare;
@@ -5952,6 +5955,7 @@ var elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
+var elm$json$Json$Encode$string = _Json_wrap;
 var author$project$Main$postLogin = function (login) {
 	return elm$http$Http$post(
 		{
@@ -5965,7 +5969,7 @@ var author$project$Main$postLogin = function (login) {
 						]))),
 			expect: elm$http$Http$expectWhatever(
 				function (_n0) {
-					return author$project$Main$NoOp;
+					return author$project$Main$Connected;
 				}),
 			url: '/login'
 		});
@@ -5984,7 +5988,10 @@ var author$project$Main$update = F2(
 							_Utils_update(
 								data,
 								{
-									events: A2(elm$core$List$cons, event, data.events)
+									events: _Utils_ap(
+										data.events,
+										_List_fromArray(
+											[event]))
 								})),
 						elm$core$Platform$Cmd$none);
 				case 'UpdateMessage':
@@ -6001,7 +6008,17 @@ var author$project$Main$update = F2(
 							_Utils_update(
 								data,
 								{currentDream: ''})),
-						author$project$Main$elmToJs(data.currentDream));
+						author$project$Main$elmToJs(
+							elm$json$Json$Encode$object(
+								_List_fromArray(
+									[
+										_Utils_Tuple2(
+										'tag',
+										elm$json$Json$Encode$string('dream')),
+										_Utils_Tuple2(
+										'dream',
+										elm$json$Json$Encode$string(data.currentDream))
+									]))));
 				default:
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			}
@@ -6015,9 +6032,20 @@ var author$project$Main$update = F2(
 						elm$core$Platform$Cmd$none);
 				case 'SubmitLogin':
 					return _Utils_Tuple2(
+						model,
+						author$project$Main$postLogin(login));
+				case 'Connected':
+					return _Utils_Tuple2(
 						author$project$Main$Asleep(
 							{currentDream: '', events: _List_Nil}),
-						author$project$Main$postLogin(login));
+						author$project$Main$elmToJs(
+							elm$json$Json$Encode$object(
+								_List_fromArray(
+									[
+										_Utils_Tuple2(
+										'tag',
+										elm$json$Json$Encode$string('fallAsleep'))
+									]))));
 				default:
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			}
@@ -6030,9 +6058,6 @@ var author$project$Main$UpdateLogin = function (a) {
 };
 var author$project$Main$UpdateMessage = function (a) {
 	return {$: 'UpdateMessage', a: a};
-};
-var elm$core$Basics$identity = function (x) {
-	return x;
 };
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
@@ -6230,6 +6255,19 @@ var author$project$Main$view = function (model) {
 			_List_fromArray(
 				[
 					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					A2(
+						elm$core$List$map,
+						A2(
+							elm$core$Basics$composeL,
+							A2(
+								elm$core$Basics$composeL,
+								elm$html$Html$li(_List_Nil),
+								elm$core$List$singleton),
+							author$project$Main$viewEvent),
+						data.events)),
+					A2(
 					elm$html$Html$form,
 					_List_fromArray(
 						[
@@ -6246,20 +6284,7 @@ var author$project$Main$view = function (model) {
 									elm$html$Html$Attributes$value(data.currentDream)
 								]),
 							_List_Nil)
-						])),
-					A2(
-					elm$html$Html$ul,
-					_List_Nil,
-					A2(
-						elm$core$List$map,
-						A2(
-							elm$core$Basics$composeL,
-							A2(
-								elm$core$Basics$composeL,
-								elm$html$Html$li(_List_Nil),
-								elm$core$List$singleton),
-							author$project$Main$viewEvent),
-						data.events))
+						]))
 				]));
 	}
 };
