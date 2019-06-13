@@ -20,7 +20,7 @@ def logout():
     try:
         login = session.pop('login')
         socketio.emit('event', {
-          "tag": "loggout",
+          "tag": "logout",
           "login": session['login'],
         }, broadcast=True)
         return "logged out"

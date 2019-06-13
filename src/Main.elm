@@ -1,12 +1,14 @@
 port module Main exposing (main)
 
 import Browser
+import Browser.Dom
 import Html exposing (..)
 import Html.Attributes as Attributes
 import Html.Events exposing (onClick, onInput, onSubmit)
 import Http
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Encode as Encode
+import Task
 
 
 port elmToJs : Value -> Cmd msg
@@ -75,7 +77,7 @@ update msg model =
         Asleep data ->
             case msg of
                 NewEvent event ->
-                    ( Asleep { data | events = data.events ++ [event]}, Cmd.none )
+                    ( Asleep { data | events = data.events ++ [ event ] }, Cmd.none )
 
                 UpdateMessage s ->
                     ( Asleep { data | currentDream = s }, Cmd.none )
@@ -96,12 +98,16 @@ update msg model =
 
                 SubmitLogin ->
                     ( model, postLogin login )
-                    
+
                 Connected ->
-                    ( Asleep { events = [], currentDream = "" }, elmToJs <|
-                      Encode.object [
-                        ("tag", Encode.string "fallAsleep")
-                      ]  
+                    ( Asleep { events = [], currentDream = "" }
+                    , Cmd.batch
+                        [ elmToJs <|
+                            Encode.object
+                                [ ( "tag", Encode.string "fallAsleep" )
+                                ]
+                        , Task.attempt (\_ -> NoOp) (Browser.Dom.focus "dream-input")
+                        ]
                     )
 
                 _ ->
@@ -146,6 +152,7 @@ view model =
                         [ onInput UpdateMessage
                         , Attributes.placeholder "Let me know your dreams..."
                         , Attributes.value data.currentDream
+                        , Attributes.id "dream-input"
                         ]
                         []
                     ]

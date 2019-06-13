@@ -5974,320 +5974,6 @@ var author$project$Main$postLogin = function (login) {
 			url: '/login'
 		});
 };
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Main$update = F2(
-	function (msg, model) {
-		if (model.$ === 'Asleep') {
-			var data = model.a;
-			switch (msg.$) {
-				case 'NewEvent':
-					var event = msg.a;
-					return _Utils_Tuple2(
-						author$project$Main$Asleep(
-							_Utils_update(
-								data,
-								{
-									events: _Utils_ap(
-										data.events,
-										_List_fromArray(
-											[event]))
-								})),
-						elm$core$Platform$Cmd$none);
-				case 'UpdateMessage':
-					var s = msg.a;
-					return _Utils_Tuple2(
-						author$project$Main$Asleep(
-							_Utils_update(
-								data,
-								{currentDream: s})),
-						elm$core$Platform$Cmd$none);
-				case 'SubmitCurrentMessage':
-					return _Utils_Tuple2(
-						author$project$Main$Asleep(
-							_Utils_update(
-								data,
-								{currentDream: ''})),
-						author$project$Main$elmToJs(
-							elm$json$Json$Encode$object(
-								_List_fromArray(
-									[
-										_Utils_Tuple2(
-										'tag',
-										elm$json$Json$Encode$string('dream')),
-										_Utils_Tuple2(
-										'dream',
-										elm$json$Json$Encode$string(data.currentDream))
-									]))));
-				default:
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			}
-		} else {
-			var login = model.a;
-			switch (msg.$) {
-				case 'UpdateLogin':
-					var newLogin = msg.a;
-					return _Utils_Tuple2(
-						author$project$Main$Awake(newLogin),
-						elm$core$Platform$Cmd$none);
-				case 'SubmitLogin':
-					return _Utils_Tuple2(
-						model,
-						author$project$Main$postLogin(login));
-				case 'Connected':
-					return _Utils_Tuple2(
-						author$project$Main$Asleep(
-							{currentDream: '', events: _List_Nil}),
-						author$project$Main$elmToJs(
-							elm$json$Json$Encode$object(
-								_List_fromArray(
-									[
-										_Utils_Tuple2(
-										'tag',
-										elm$json$Json$Encode$string('fallAsleep'))
-									]))));
-				default:
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			}
-		}
-	});
-var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
-var author$project$Main$SubmitLogin = {$: 'SubmitLogin'};
-var author$project$Main$UpdateLogin = function (a) {
-	return {$: 'UpdateLogin', a: a};
-};
-var author$project$Main$UpdateMessage = function (a) {
-	return {$: 'UpdateMessage', a: a};
-};
-var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
-var elm$html$Html$span = _VirtualDom_node('span');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
-var author$project$Main$viewEvent = function (event) {
-	switch (event.$) {
-		case 'EDream':
-			var dream = event.a;
-			return A2(
-				elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								A2(elm$html$Html$Attributes$style, 'font-weight', 'bold')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(dream.from + ' : ')
-							])),
-						elm$html$Html$text(dream.content)
-					]));
-		case 'ELogin':
-			var login = event.a;
-			return A2(
-				elm$html$Html$span,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(login + ' fell asleep... We will know his dreams!')
-					]));
-		default:
-			var login = event.a;
-			return A2(
-				elm$html$Html$span,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
-					]),
-				_List_fromArray(
-					[
-						elm$html$Html$text(login + ' awoke. We can\'t hear his dreams anymore.')
-					]));
-	}
-};
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var elm$html$Html$br = _VirtualDom_node('br');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$form = _VirtualDom_node('form');
-var elm$html$Html$input = _VirtualDom_node('input');
-var elm$html$Html$li = _VirtualDom_node('li');
-var elm$html$Html$ul = _VirtualDom_node('ul');
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
-var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
-};
-var elm$html$Html$Events$alwaysPreventDefault = function (msg) {
-	return _Utils_Tuple2(msg, true);
-};
-var elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
-	return {$: 'MayPreventDefault', a: a};
-};
-var elm$html$Html$Events$preventDefaultOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
-	});
-var elm$html$Html$Events$onSubmit = function (msg) {
-	return A2(
-		elm$html$Html$Events$preventDefaultOn,
-		'submit',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysPreventDefault,
-			elm$json$Json$Decode$succeed(msg)));
-};
-var author$project$Main$view = function (model) {
-	if (model.$ === 'Awake') {
-		var currentLogin = model.a;
-		return A2(
-			elm$html$Html$form,
-			_List_fromArray(
-				[
-					elm$html$Html$Events$onSubmit(author$project$Main$SubmitLogin)
-				]),
-			_List_fromArray(
-				[
-					elm$html$Html$text('Hello dreamer... What is your name?'),
-					A2(elm$html$Html$br, _List_Nil, _List_Nil),
-					A2(
-					elm$html$Html$input,
-					_List_fromArray(
-						[
-							elm$html$Html$Events$onInput(author$project$Main$UpdateLogin),
-							elm$html$Html$Attributes$placeholder('Who are you?'),
-							elm$html$Html$Attributes$value(currentLogin)
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$input,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$type_('submit'),
-							elm$html$Html$Attributes$value('Fall asleep')
-						]),
-					_List_Nil)
-				]));
-	} else {
-		var data = model.a;
-		return A2(
-			elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$ul,
-					_List_Nil,
-					A2(
-						elm$core$List$map,
-						A2(
-							elm$core$Basics$composeL,
-							A2(
-								elm$core$Basics$composeL,
-								elm$html$Html$li(_List_Nil),
-								elm$core$List$singleton),
-							author$project$Main$viewEvent),
-						data.events)),
-					A2(
-					elm$html$Html$form,
-					_List_fromArray(
-						[
-							elm$html$Html$Events$onSubmit(author$project$Main$SubmitCurrentMessage)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							elm$html$Html$input,
-							_List_fromArray(
-								[
-									elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
-									elm$html$Html$Attributes$placeholder('Let me know your dreams...'),
-									elm$html$Html$Attributes$value(data.currentDream)
-								]),
-							_List_Nil)
-						]))
-				]));
-	}
-};
 var elm$browser$Browser$External = function (a) {
 	return {$: 'External', a: a};
 };
@@ -6310,6 +5996,20 @@ var elm$core$Task$Perform = function (a) {
 	return {$: 'Perform', a: a};
 };
 var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
 var elm$core$Task$map = F2(
 	function (func, taskA) {
 		return A2(
@@ -6360,6 +6060,18 @@ var elm$core$Task$perform = F2(
 			elm$core$Task$Perform(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
+var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
 var elm$core$String$length = _String_length;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
@@ -6488,6 +6200,326 @@ var elm$url$Url$fromString = function (str) {
 		elm$url$Url$chompAfterProtocol,
 		elm$url$Url$Https,
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
+};
+var elm$browser$Browser$Dom$focus = _Browser_call('focus');
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var elm$core$Task$onError = _Scheduler_onError;
+var elm$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return elm$core$Task$command(
+			elm$core$Task$Perform(
+				A2(
+					elm$core$Task$onError,
+					A2(
+						elm$core$Basics$composeL,
+						A2(elm$core$Basics$composeL, elm$core$Task$succeed, resultToMessage),
+						elm$core$Result$Err),
+					A2(
+						elm$core$Task$andThen,
+						A2(
+							elm$core$Basics$composeL,
+							A2(elm$core$Basics$composeL, elm$core$Task$succeed, resultToMessage),
+							elm$core$Result$Ok),
+						task))));
+	});
+var author$project$Main$update = F2(
+	function (msg, model) {
+		if (model.$ === 'Asleep') {
+			var data = model.a;
+			switch (msg.$) {
+				case 'NewEvent':
+					var event = msg.a;
+					return _Utils_Tuple2(
+						author$project$Main$Asleep(
+							_Utils_update(
+								data,
+								{
+									events: _Utils_ap(
+										data.events,
+										_List_fromArray(
+											[event]))
+								})),
+						elm$core$Platform$Cmd$none);
+				case 'UpdateMessage':
+					var s = msg.a;
+					return _Utils_Tuple2(
+						author$project$Main$Asleep(
+							_Utils_update(
+								data,
+								{currentDream: s})),
+						elm$core$Platform$Cmd$none);
+				case 'SubmitCurrentMessage':
+					return _Utils_Tuple2(
+						author$project$Main$Asleep(
+							_Utils_update(
+								data,
+								{currentDream: ''})),
+						author$project$Main$elmToJs(
+							elm$json$Json$Encode$object(
+								_List_fromArray(
+									[
+										_Utils_Tuple2(
+										'tag',
+										elm$json$Json$Encode$string('dream')),
+										_Utils_Tuple2(
+										'dream',
+										elm$json$Json$Encode$string(data.currentDream))
+									]))));
+				default:
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			}
+		} else {
+			var login = model.a;
+			switch (msg.$) {
+				case 'UpdateLogin':
+					var newLogin = msg.a;
+					return _Utils_Tuple2(
+						author$project$Main$Awake(newLogin),
+						elm$core$Platform$Cmd$none);
+				case 'SubmitLogin':
+					return _Utils_Tuple2(
+						model,
+						author$project$Main$postLogin(login));
+				case 'Connected':
+					return _Utils_Tuple2(
+						author$project$Main$Asleep(
+							{currentDream: '', events: _List_Nil}),
+						elm$core$Platform$Cmd$batch(
+							_List_fromArray(
+								[
+									author$project$Main$elmToJs(
+									elm$json$Json$Encode$object(
+										_List_fromArray(
+											[
+												_Utils_Tuple2(
+												'tag',
+												elm$json$Json$Encode$string('fallAsleep'))
+											]))),
+									A2(
+									elm$core$Task$attempt,
+									function (_n3) {
+										return author$project$Main$NoOp;
+									},
+									elm$browser$Browser$Dom$focus('dream-input'))
+								])));
+				default:
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			}
+		}
+	});
+var author$project$Main$SubmitCurrentMessage = {$: 'SubmitCurrentMessage'};
+var author$project$Main$SubmitLogin = {$: 'SubmitLogin'};
+var author$project$Main$UpdateLogin = function (a) {
+	return {$: 'UpdateLogin', a: a};
+};
+var author$project$Main$UpdateMessage = function (a) {
+	return {$: 'UpdateMessage', a: a};
+};
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var elm$html$Html$Attributes$style = elm$virtual_dom$VirtualDom$style;
+var author$project$Main$viewEvent = function (event) {
+	switch (event.$) {
+		case 'EDream':
+			var dream = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2(elm$html$Html$Attributes$style, 'font-weight', 'bold')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(dream.from + ' : ')
+							])),
+						elm$html$Html$text(dream.content)
+					]));
+		case 'ELogin':
+			var login = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(login + ' fell asleep... We will know his dreams!')
+					]));
+		default:
+			var login = event.a;
+			return A2(
+				elm$html$Html$span,
+				_List_fromArray(
+					[
+						A2(elm$html$Html$Attributes$style, 'font-style', 'italic')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(login + ' awoke. We can\'t hear his dreams anymore.')
+					]));
+	}
+};
+var elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var elm$html$Html$br = _VirtualDom_node('br');
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$form = _VirtualDom_node('form');
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$li = _VirtualDom_node('li');
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$id = elm$html$Html$Attributes$stringProperty('id');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var elm$html$Html$Events$alwaysPreventDefault = function (msg) {
+	return _Utils_Tuple2(msg, true);
+};
+var elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 'MayPreventDefault', a: a};
+};
+var elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var elm$html$Html$Events$onSubmit = function (msg) {
+	return A2(
+		elm$html$Html$Events$preventDefaultOn,
+		'submit',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysPreventDefault,
+			elm$json$Json$Decode$succeed(msg)));
+};
+var author$project$Main$view = function (model) {
+	if (model.$ === 'Awake') {
+		var currentLogin = model.a;
+		return A2(
+			elm$html$Html$form,
+			_List_fromArray(
+				[
+					elm$html$Html$Events$onSubmit(author$project$Main$SubmitLogin)
+				]),
+			_List_fromArray(
+				[
+					elm$html$Html$text('Hello dreamer... What is your name?'),
+					A2(elm$html$Html$br, _List_Nil, _List_Nil),
+					A2(
+					elm$html$Html$input,
+					_List_fromArray(
+						[
+							elm$html$Html$Events$onInput(author$project$Main$UpdateLogin),
+							elm$html$Html$Attributes$placeholder('Who are you?'),
+							elm$html$Html$Attributes$value(currentLogin)
+						]),
+					_List_Nil),
+					A2(
+					elm$html$Html$input,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$type_('submit'),
+							elm$html$Html$Attributes$value('Fall asleep')
+						]),
+					_List_Nil)
+				]));
+	} else {
+		var data = model.a;
+		return A2(
+			elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$ul,
+					_List_Nil,
+					A2(
+						elm$core$List$map,
+						A2(
+							elm$core$Basics$composeL,
+							A2(
+								elm$core$Basics$composeL,
+								elm$html$Html$li(_List_Nil),
+								elm$core$List$singleton),
+							author$project$Main$viewEvent),
+						data.events)),
+					A2(
+					elm$html$Html$form,
+					_List_fromArray(
+						[
+							elm$html$Html$Events$onSubmit(author$project$Main$SubmitCurrentMessage)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$input,
+							_List_fromArray(
+								[
+									elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
+									elm$html$Html$Attributes$placeholder('Let me know your dreams...'),
+									elm$html$Html$Attributes$value(data.currentDream),
+									elm$html$Html$Attributes$id('dream-input')
+								]),
+							_List_Nil)
+						]))
+				]));
+	}
 };
 var elm$browser$Browser$element = _Browser_element;
 var author$project$Main$main = elm$browser$Browser$element(
