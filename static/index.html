@@ -14,10 +14,18 @@
     <script type="text/javascript" charset="utf-8">
         var app = Elm.Main.init({ node: document.querySelector('#app')})
         
-        var socket = io();
+        var socket;
       
-        app.ports.elmToJs.subscribe(function(dream){
-          socket.emit('dream', dream);
+        app.ports.elmToJs.subscribe(function(event){
+          switch(event.tag){
+              case "fallAsleep": 
+                socket = io();
+                break;
+              
+              case "dream":
+                socket.emit('dream', dream);
+                break;
+          }
         })
       
         socket.on('event', function(event){

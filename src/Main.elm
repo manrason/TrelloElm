@@ -16,13 +16,14 @@ type Event
     | ELogin String
     | ELoggout String
 
-type alias Model =
-    { events : List Event, currentDream : String }
+type Model 
+    = Awake
+    | Asleep { events : List Event, currentDream : String }
 
 
 initialModel : Model
 initialModel =
-    { events = [], currentDream = "" }
+    Awake    
 
 
 
@@ -74,18 +75,30 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ form [ onSubmit SubmitCurrentMessage ]
-            [ input
-                [ onInput UpdateMessage
-                , Attributes.placeholder "Nouveau message..."
-                , Attributes.value model.currentDream
-                ]
-                []
-            ]
-        , ul [] <|
-            List.map (li [] << List.singleton<< viewEvent) model.events
-        ]
+    case model of
+        Awake ->
+            form [ onSubmit SubmitLogin ]
+                  [ input
+                      [ onInput UpdateMessage
+                      , Attributes.placeholder "Hello dreamer... What is your name?"
+                      , Attributes.value data.currentDream
+                      ]
+                      []
+                    
+                  ]
+        Asleep data ->
+          div []
+              [ form [ onSubmit SubmitCurrentMessage ]
+                  [ input
+                      [ onInput UpdateMessage
+                      , Attributes.placeholder "Let me know your dreams..."
+                      , Attributes.value data.currentDream
+                      ]
+                      []
+                  ]
+              , ul [] <|
+                  List.map (li [] << List.singleton<< viewEvent) data.events
+              ]
 
 
 viewEvent : Event -> Html Msg
@@ -98,10 +111,10 @@ viewEvent event =
               ]
             
         ELogin login ->
-            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est connecté sur le serveur, bienvenue!"]
+            span [Attributes.style "font-style" "italic"] [text <| login ++ " fell asleep... We will know his dreams!"]
             
         ELoggout login ->
-            span [Attributes.style "font-style" "italic"] [text <| login ++ " s'est déconnecté du serveur... Bye bye!"]
+            span [Attributes.style "font-style" "italic"] [text <| login ++ " awoke. We can't hear his dreams anymore."]
         
     
 

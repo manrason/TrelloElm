@@ -4971,7 +4971,7 @@ var author$project$Main$viewEvent = function (event) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text(login + ' s\'est connecté sur le serveur, bienvenue!')
+						elm$html$Html$text(login + ' fell asleep... We will know his dreams!')
 					]));
 		default:
 			var login = event.a;
@@ -4983,7 +4983,7 @@ var author$project$Main$viewEvent = function (event) {
 					]),
 				_List_fromArray(
 					[
-						elm$html$Html$text(login + ' s\'est déconnecté du serveur... Bye bye!')
+						elm$html$Html$text(login + ' awoke. We can\'t hear his dreams anymore.')
 					]));
 	}
 };
@@ -5152,7 +5152,7 @@ var author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								elm$html$Html$Events$onInput(author$project$Main$UpdateMessage),
-								elm$html$Html$Attributes$placeholder('Nouveau message...'),
+								elm$html$Html$Attributes$placeholder('Let me know your dreams...'),
 								elm$html$Html$Attributes$value(model.currentDream)
 							]),
 						_List_Nil)
