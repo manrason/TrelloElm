@@ -6,6 +6,10 @@
 <h1>
   Hello {{ current_user.name }}!
 </h1>
+
+<form action="/posts" method="POST">
+  <input name="content" 
+</form>
 Here is the list of users:
 <ul>  
 {% for user in users %}

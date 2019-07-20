@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, session, g, redirect, url_for
 import flask_login
 import sqlite3
-from models.user import User
 
+from models.user import User
+from models.post import Post
 DATABASE = '.data/db.sqlite'
 app = Flask(__name__)
 app.secret_key = 'mysecret!'
@@ -53,7 +54,11 @@ def home():
   db = get_db()
   cur = db.cursor()
   
-  return render_template('index.html', users=User.getAll(cur))
+  return render_template(
+    'index.html',
+    users=User.getAll(cur),
+    posts=Post.getAll(cur),
+  )
 
 @app.route("/login", methods=['POST'])
 def login_post():
@@ -129,7 +134,18 @@ def logout():
     flask_login.logout_user()
     return redirect(url_for('login_get'))
 
-  
+@app.route('/posts/', methods=['POST'])
+@flask_login.login_required
+def posts_post():
+    content = request.form["content"]
+    post = Post.new(content=content, author_id=flask_login.current_user.get_id())
+    
+    db = get_db()
+    cur = db.cursor()
+    post.insert(cur)
+    db.commit()
+    return redirect(url_for('home'))
+
   
 if __name__ == '__main__':
     app.run(debug=True)

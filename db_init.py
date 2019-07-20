@@ -24,18 +24,25 @@ users = [
 
 posts = [
     Post.new(content="Hi!", author_id="ford@betelgeuse.star"),
-    Post.new(content="Don't destroy the earth please!", 
-             author_id="ford@betelgeuse.star"),
+    Post.new(content="Don't destroy the earth please!", author_id="arthur@earth.planet"),
 ]
+
 for user in users:
     user.insert(cur)
 
+for post in posts:
+    post.insert(cur)
+
 db.commit()
 
-print("The following users has been added to the DB"
+print("The following users has been inserted into the DB"
       " (all the passwords are 12345):")
 
 for user in users:
     # uses the magic __repr__ method
-    print(user)
+    print("\t", user)
     
+print
+print("Here are the posts inserted:")
+for post in posts:
+    print("\t", post)

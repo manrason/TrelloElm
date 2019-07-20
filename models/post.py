@@ -1,6 +1,4 @@
-import flask_login
 import datetime
-
 
 class Post:
     def __init__(self, content, author_id, timestamp, rowid):
@@ -37,7 +35,7 @@ class Post:
     def __repr__(self):
         return "[Post by %s at %s: %s]"%(
             self.author_id, 
-            str(datetime.fromtimestamp(self.timestamp)),
+            str(datetime.datetime.fromtimestamp(self.timestamp)),
             self.content[:50]
         )
     
@@ -47,7 +45,7 @@ class Post:
             content=content,
             author_id=author_id,
             rowid=None,
-            timestamp=datetime.datetime().now().timestamp(),
+            timestamp=datetime.datetime.now().timestamp(),
         )
 
     def _from_row(cls, row):
