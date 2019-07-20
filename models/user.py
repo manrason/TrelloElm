@@ -21,18 +21,19 @@ class User(flask_login.UserMixin):
               ( id
               , name
               , email
+              , password_hash
               )
               VALUES 
-              (NULL, ?, ?)
-            ''', (self.name, self.email)
+              (NULL, ?, ?, ?)
+            ''', (self.name, self.email, self.password_hash)
             )
             self.id = cursor.lastrowid
         else:
             cursor.exectue('''
               UPDATE users
-              SET name = ?, email = ?
+              SET name = ?, email = ?, password_hash = ?
               WHERE id = ?
-            ''', (self.name, self.email, self.id)
+            ''', (self.name, self.email, self.id, self.password_hash)
             )
 
     def __repr__(self):
@@ -42,7 +43,7 @@ class User(flask_login.UserMixin):
         
         
     @classmethod
-    def get(cls, cursor, id):
+    def getById(cls, cursor, id):
         cursor.execute('''
             SELECT * FROM users WHERE id = ?
         ''', id)
@@ -51,7 +52,29 @@ class User(flask_login.UserMixin):
         if res is None:
             return None
         
-        return User(name=res['name'], email=res['email'], id=res['id'])
+        return User(
+          name=res['name'],
+          email=res['email'],
+          id=res['id'],
+          password_hash=res['password_hash']
+        )
+
+    @classmethod
+    def getById(cls, cursor, email):
+        cursor.execute('''
+            SELECT * FROM users WHERE email = ?
+        ''', email)
+
+        res = cursor.fetchone()
+        if res is None:
+            return None
+        
+        return User(
+          name=res['name'],
+          email=res['email'],
+          id=res['id'],
+          password_hash=res['password_hash']
+        )
 
     @classmethod
     def create_table(cls, cursor):
@@ -61,6 +84,7 @@ class User(flask_login.UserMixin):
         CREATE TABLE users      
         ( id INT PRIMARY KEY
         , name TEXT NOT NULL
-        , email TEXT NOT NULL
+        , password_hash TEXT NOT NULL
+        , email TEXT NOT NULL UNIQUE
         )''')
 

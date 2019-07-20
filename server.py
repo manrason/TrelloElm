@@ -21,16 +21,25 @@ def login_post():
     password = request.form.get('password')
     remember = request.form.get('remember_me')
     if not email or not password:
-        flash("Please provide your email and your password.")
-        return render_template('login.html', error_msg=("Please provide your email and your password." )
+        return render_template(
+          'login.html',
+          error_msg=("Please provide your email and your password."),
+        )
 
 
-    user = User.query.get(email)
+    user = User.getByEmail(email)
     if user is None or not user.check_password(password):
+          return render_template(
+            'login.html',
+            error_msg=("Authentication failed" ),
+          )
+    
+    flask_login.login_user(user, remember=remember)
+    return redirect(url_for('home'))
 
 @app.route('/login', methods=['GET'])
 def login_get():
-    return flask.render_template('login.html')
+    return render_template('login.html')
 
     
 
