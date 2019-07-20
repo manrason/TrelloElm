@@ -52,46 +52,30 @@ class Post:
 
     def _from_row(cls, row):
         return User(
-          
+          content=row['content'],
+          author_id=row['author_id'],
+          rowid=row['rowid'],
+          timestamp=row['timestamp']
         )
+
     @classmethod
     def getAll(cls, cursor):
       cursor.execute('''
           SELECT * FROM posts
       ''')
-      return [
-        User(
-          content=row['content'],
-          email=row['email'],
-          password_hash=row['password_hash']
-        )
-        for row in cursor.fetchall()
-      ]
+      return [ User._from_row(row) for row in cursor.fetchall() ]
 
-    @classmethod
-    def getByEmail(cls, cursor, email):
-        cursor.execute('''
-            SELECT * FROM users WHERE email = ?
-        ''', (email,))
-
-        row = cursor.fetchone()
-        if row is None:
-            return None
-        
-        return User(
-          name=row['name'],
-          email=row['email'],
-          password_hash=row['password_hash']
-        )
+    
 
     @classmethod
     def create_table(cls, cursor):
-        cursor.execute('DROP TABLE IF EXISTS users')
+        cursor.execute('DROP TABLE IF EXISTS posts')
 
         cursor.execute('''
-        CREATE TABLE users      
-        ( name TEXT NOT NULL
-        , password_hash TEXT NOT NULL
-        , email TEXT NOT NULL PRIMARY KEY
+        CREATE TABLE posts
+        ( author_id TEXT NOT NULL
+        , content TEXT
+        , timestamp DOUBLE
+        , FOREIGN KEY (author_id) REFERENCES users(email)
         )''')
 
