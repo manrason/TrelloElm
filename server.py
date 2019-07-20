@@ -42,24 +42,22 @@ login_manager.init_app(app)
 login_manager.login_view = 'login_get'
 
 @login_manager.user_loader
-def load_user(id):
+def load_user(email):
     db = get_db()
     cur = db.cursor()
-    return User.getById(cur, id)
+    return User.getByEmail(cur, email)
 
 @app.route("/")
 @flask_login.login_required
 def home():
-  return send_from_directory('static', 'index.html')
+  return render_template('index.html')
 
 @app.route("/login", methods=['POST'])
 def login_post():
-    print("hello")
     email = request.form.get('email')
     password = request.form.get('password')
     remember = request.form.get('remember_me')
     if not email or not password:
-        print("pass")
         return render_template(
           'login.html',
           error_msg="Please provide your email and your password.",
@@ -70,12 +68,11 @@ def login_post():
     
     user = User.getByEmail(cur, email)
     if user is None or not user.check_password(password):
-        print("hi")
         return render_template(
           'login.html',
           error_msg="Authentication failed",
         )
-    print("logg in")
+
     flask_login.login_user(user, remember=remember)
     print(flask_login.current_user)
     return redirect(url_for('home'))
@@ -112,7 +109,7 @@ def register_post():
     db = get_db()
     cur = db.cursor()
     try:
-        user.save(cur)
+        user.insert(cur)
     except sqlite.IntegrityError:
         return render_template(
           'register.html',
@@ -120,7 +117,12 @@ def register_post():
         )
     
     return redirect(url_for('login_get'))
-    
+
+@app.route('/logout', methods=['GET'])
+@flask_login.login_required
+def logout():
+    flask_login.logout_user()
+    return redirect(url_for('login_get'))
 
 if __name__ == '__main__':
     app.run(debug=True)

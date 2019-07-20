@@ -18,16 +18,18 @@ class User(flask_login.UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
+    def get_id(self):
+        return self.email
+
     def insert(self, cursor):
         cursor.execute('''
           INSERT INTO users 
-          ( id
-          , name
+          ( name
           , email
           , password_hash
           )
           VALUES 
-          (NULL, ?, ?, ?)
+          ( ?, ?, ?)
         ''', (self.name, self.email, self.password_hash)
         )
         

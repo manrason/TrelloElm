@@ -21,7 +21,7 @@ users = [
 ]
 
 for user in users:
-    user.save(cur)
+    user.insert(cur)
 
 db.commit()
 
