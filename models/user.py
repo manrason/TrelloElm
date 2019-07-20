@@ -10,11 +10,12 @@ class User(flask_login.UserMixin):
         if self.id is None:
             cursor.execute('''
               INSERT INTO users 
-              ( name
+              ( id
+              , name
               , email
               )
               VALUES 
-              (?, ?)
+              (NULL, ?, ?)
             ''', (self.name, self.email)
             )
             self.id = cursor.lastrowid
@@ -49,9 +50,9 @@ class User(flask_login.UserMixin):
         cursor.execute('DROP TABLE IF EXISTS users')
 
         cursor.execute('''
-        CREATE TABLE users        ( 
-          id INT PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          email TEXT NOT NULL
+        CREATE TABLE users      
+        ( id INT PRIMARY KEY
+        , name TEXT NOT NULL
+        , email TEXT NOT NULL
         )''')
 
