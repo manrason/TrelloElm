@@ -45,7 +45,19 @@ class User(flask_login.UserMixin):
         return "[User %s<%s>]"%(self.name, self.email)
         
         
-
+    @classmethod
+    def getAll(cls, cursor):
+      cursor.execute('''
+          SELECT * FROM users
+      ''')
+      return [
+        User(
+          name=row['name'],
+          email=row['email'],
+          password_hash=row['password_hash']
+        )
+        for row in cursor.fetchall()
+      ]
 
     @classmethod
     def getByEmail(cls, cursor, email):
@@ -53,14 +65,14 @@ class User(flask_login.UserMixin):
             SELECT * FROM users WHERE email = ?
         ''', (email,))
 
-        res = cursor.fetchone()
-        if res is None:
+        row = cursor.fetchone()
+        if row is None:
             return None
         
         return User(
-          name=res['name'],
-          email=res['email'],
-          password_hash=res['password_hash']
+          name=row['name'],
+          email=row['email'],
+          password_hash=row['password_hash']
         )
 
     @classmethod

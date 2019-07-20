@@ -1,39 +1,15 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Let's dream together!</title>
-    <meta name="description" content="Dream together">
-    <meta charset="utf-8">
-    <script src="static/elm.js"></script>
-  </head>
-  <body>
-    <div id="app">
+{% extends "layout.html" %}
 
-    </div>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf-8">
-        var app = Elm.Main.init({ node: document.querySelector('#app')})
-        
-        var socket;
-      
-        app.ports.elmToJs.subscribe(function(event){
-          switch(event.tag){
-              case "fallAsleep": 
-                socket = io();
-                socket.on('event', function(event){
-                  app.ports.jsToElm.send(event);
-                })
-                break;
-              
-              case "dream":
-                socket.emit('dream', event.dream);
-                break;
-              
-              default:
-                console.log("Unexpected event from Elm code:", event)
-          }
-        });
-        
-    </script>
-  </body>
-</html>
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<h1>
+  Hello {{ current_user.name }}!
+</h1>
+Here is the list of users:
+<ul>  
+{% for user in users %}
+    <li>{{ user.name }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

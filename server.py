@@ -50,7 +50,10 @@ def load_user(email):
 @app.route("/")
 @flask_login.login_required
 def home():
-  return render_template('index.html')
+  db = get_db()
+  cur = db.cursor()
+  
+  return render_template('index.html', users=User.getAll(cur))
 
 @app.route("/login", methods=['POST'])
 def login_post():
@@ -116,6 +119,8 @@ def register_post():
           error_msg="This is email is already registered.",
         )
     
+    db.commit()
+    
     return redirect(url_for('login_get'))
 
 @app.route('/logout', methods=['GET'])
@@ -124,5 +129,7 @@ def logout():
     flask_login.logout_user()
     return redirect(url_for('login_get'))
 
+  
+  
 if __name__ == '__main__':
     app.run(debug=True)
