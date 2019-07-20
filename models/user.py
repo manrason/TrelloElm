@@ -1,7 +1,7 @@
 import flask_login
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(flask_login.UserMixin):
+class User:
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
@@ -10,8 +10,6 @@ class User(flask_login.UserMixin):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     
-    def get_id(self):
-        return self.email
 
     def insert(self, cursor):
         cursor.execute('''
@@ -39,24 +37,22 @@ class User(flask_login.UserMixin):
         , email TEXT NOT NULL PRIMARY KEY
         )''')
    
-class UserForLogin:
+class UserForLogin(flask_login.UserMixin):
     def __init__(self, row):
         self.email = row['email']
-        self.password = 
-class UserForDisplay:
-    def __init__(self, row):
+        self.password_hash = row['password_hash']
         self.name = row['name']
-        self.email = row['email']
-        
-    @classmethod
-    def getAll(cls, cursor):
-      cursor.execute('SELECT name, email FROM users')
-      return [ cls(row) for row in cursor.fetchall() ]
-
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def get_id(self):
+        return self.email
+      
     @classmethod
     def getByEmail(cls, cursor, email):
         cursor.execute('''
-            SELECT name, email
+            SELECT email, password_hash, name
             FROM users
             WHERE email = ?
         ''', (email,))
@@ -66,5 +62,8 @@ class UserForDisplay:
             return None
         
         return cls(row)
-
-
+    
+    @classmethod
+    def getAll(cls, cursor):
+      cursor.execute('SELECT name, email, password_hash FROM users')
+      return [ cls(row) for row in cursor.fetchall() ]
