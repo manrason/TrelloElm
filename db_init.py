@@ -42,7 +42,7 @@ for user in users:
     # uses the magic __repr__ method
     print("\t", user)
     
-print
+print()
 print("Here are the posts inserted:")
 for post in posts:
     print("\t", post)
