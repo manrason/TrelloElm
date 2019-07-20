@@ -3,12 +3,12 @@ import datetime
 
 
 class Post:
-    def __init__(self, content, author_id):
+    def __init__(self, content, author_id, timestamp, rowid):
         self.content = content
         self.author_id = author_id
-        self.timestamp = datetime.datetime().now().timestamp()
+        self.timestamp = timestamp
         
-        self._rowid = None
+        self._rowid = rowid
 
     def insert(self, cursor):
         cursor.execute('''
@@ -35,17 +35,33 @@ class Post:
         )
 
     def __repr__(self):
-        return "[Post Author%s: %s]"%(self.name, self.email)
-        
-        
+        return "[Post by %s at %s: %s]"%(
+            self.author_id, 
+            str(datetime.fromtimestamp(self.timestamp)),
+            self.content[:50]
+        )
+    
+    @classmethod
+    def new(cls, content, author_id):
+        return cls(
+            content=content,
+            author_id=author_id,
+            rowid=None,
+            timestamp=datetime.datetime().now().timestamp(),
+        )
+
+    def _from_row(cls, row):
+        return User(
+          
+        )
     @classmethod
     def getAll(cls, cursor):
       cursor.execute('''
-          SELECT * FROM users
+          SELECT * FROM posts
       ''')
       return [
         User(
-          name=row['name'],
+          content=row['content'],
           email=row['email'],
           password_hash=row['password_hash']
         )
