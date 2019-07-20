@@ -1,9 +1,14 @@
 from flask import Flask, render_template, send_from_directory, request, session, jsonify
-from flask_socketio import SocketIO, emit
+import flask_login
+
+import models.user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login_get'
 
 
 @app.route("/")
