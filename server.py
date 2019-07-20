@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, g, redirect, url_for
 import flask_login
 import sqlite3
 
-from models.user import User
+from models.user import User, UserForDisplay
 from models.post import Post
 DATABASE = '.data/db.sqlite'
 app = Flask(__name__)
@@ -46,7 +46,7 @@ login_manager.login_view = 'login_get'
 def load_user(email):
     db = get_db()
     cur = db.cursor()
-    return User.getByEmail(cur, email)
+    return UserForDisplay.getByEmail(cur, email)
 
 @app.route("/")
 @flask_login.login_required
@@ -56,8 +56,8 @@ def home():
   
   return render_template(
     'index.html',
-    users=User.getAll(cur),
-    posts=Post.getAll(cur),
+    users=UserForDisplay.getAll(cur),
+    posts=PostForDisplay.getAll(cur),
   )
 
 @app.route("/login", methods=['POST'])

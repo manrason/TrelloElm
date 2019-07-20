@@ -37,20 +37,18 @@ class Post:
         , FOREIGN KEY (author_id) REFERENCES users(email)
         )''')
 
-class PostForPrinting:
-    def __init__(self, author_name, date, content):
-        self.author_name = author_name
-        self.date = date
-        self.content = content
+class PostForDisplay:
+    def __init__(self, row):
+        self.author_name = row['author_name']
+        self.date = datetime.datetime.fromtimestamp(row['timestamp'])
+        self.content = row['content']
    
+    
     @classmethod
     def getAll(cls, cursor):
-    
-        @classmethod
-    def getAll(cls, cursor):
       cursor.execute('''
-          SELECT name, content timestamp 
+          SELECT name AS author_name, content timestamp 
           FROM posts
-          JOIN users ON 
+          JOIN users ON author_id=email
       ''')
-      return [ User._from_row(row) for row in cursor.fetchall() ]
+      return [ cls(row) for row in cursor.fetchall() ]

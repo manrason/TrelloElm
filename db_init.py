@@ -23,8 +23,8 @@ users = [
 ]
 
 posts = [
-    Post.new(content="Hi!", author_id="ford@betelgeuse.star"),
-    Post.new(content="Don't destroy the earth please!", author_id="arthur@earth.planet"),
+    Post(content="Hi!", author_id="ford@betelgeuse.star"),
+    Post(content="Don't destroy the earth please!", author_id="arthur@earth.planet"),
 ]
 
 for user in users:
