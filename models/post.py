@@ -51,5 +51,6 @@ class PostForDisplay:
           SELECT name AS author_name, content, timestamp 
           FROM posts
           JOIN users ON author_id=email
+          ORDER BY timestamp DESC
       ''')
       return [ cls(row) for row in cursor.fetchall() ]

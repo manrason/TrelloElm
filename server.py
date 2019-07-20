@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, session, g, redirect, url_for
 import flask_login
 import sqlite3
 
-import models.user
-import models.post
+from models.user import User, UserForLogin
+from models.post import Post, PostForDisplay
 
 DATABASE = '.data/db.sqlite'
 app = Flask(__name__)
@@ -47,7 +47,7 @@ login_manager.login_view = 'login_get'
 def load_user(email):
     db = get_db()
     cur = db.cursor()
-    return models.user.UserForLogin.getByEmail(cur, email)
+    return UserForLogin.getByEmail(cur, email)
 
 @app.route("/")
 @flask_login.login_required
@@ -57,8 +57,8 @@ def home():
   
   return render_template(
     'index.html',
-    users=models.user.UserForLogin.getAll(cur),
-    posts=models.post.PostForDisplay.getAll(cur),
+    users=UserForLogin.getAll(cur),
+    posts=PostForDisplay.getAll(cur),
   )
 
 @app.route("/login", methods=['POST'])
@@ -75,7 +75,7 @@ def login_post():
     db = get_db()
     cur = db.cursor()
     
-    user = models.user.UserForLogin.getByEmail(cur, email)
+    user = UserForLogin.getByEmail(cur, email)
     if user is None or not user.check_password(password):
         return render_template(
           'login.html',
@@ -114,11 +114,11 @@ def register_post():
           error_msg="The passwords do not match!",
         )
       
-    user = models.user.User(name=name, email=email, password=password1)
+    user = User(name=name, email=email, password=password1)
     db = get_db()
     cur = db.cursor()
     try:
-        models.user.insert(cur)
+        user.insert(cur)
     except sqlite.IntegrityError:
         return render_template(
           'register.html',
@@ -139,7 +139,7 @@ def logout():
 @flask_login.login_required
 def posts_post():
     content = request.form["content"]
-    post = models.post.Post(content=content, author_id=flask_login.current_models.user.get_id())
+    post = Post(content=content, author_id=flask_login.current_user.get_id())
     
     db = get_db()
     cur = db.cursor()

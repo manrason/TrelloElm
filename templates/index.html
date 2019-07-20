@@ -7,7 +7,7 @@
   Hello {{ current_user.name }}!
 </h1>
 
-<form action="/posts" method="POST">
+<form action="/posts/" method="POST">
   <input name="content" placeholder="Say something nice!" />
   <input type="submit" />
 </form>
@@ -23,7 +23,9 @@ Here is the list of users:
 Here is the list of all the posts:
 <ul>
 {% for post in posts %}
-    <li>{{ post.author_name }}, at :{{ post.content }}</li>
+    <li>{{ post.author_name }}, at {{ post.date }} said: <br/>
+      {{ post.content }}
+    </li>
 {% endfor %}
 </ul>
 {% endblock %}
