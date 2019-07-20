@@ -3,16 +3,12 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-{% if error_msg %}
-<div class="error">
-  {{ error_msg }}
-</div>
-
-Log in:
+Register:
 
 <form method="POST" action="/login">
     <label>Email: <input type="email" name="email" /></label>
-    <label>Password: <input type="password" name="password" /></label>
+    <label>Password: <input type="password" name="password1" /></label>
+    <label>Repeat: <input type="password" name="password2" /></label>
     <input type="submit" name="" value="Send" />
 </form>
 {% endblock %}

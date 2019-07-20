@@ -42,6 +42,39 @@ def login_post():
 def login_get():
     return render_template('login.html')
 
+  
+@app.route('/register', methods=['GET'])
+def register_get():
+    return render_template('login.html')
+
+@app.route("/register", methods=['POST'])
+def register_post():
+    email = request.form.get('email')
+    name = request.form.get('name')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
+    if not email or not name or not password1 or not password2:
+        return render_template(
+          'register.html',
+          error_msg=("Please provide your email, name and password."),
+        )
+
+
+    if password1 != password2:
+        return render_template(
+          'register.html',
+          error_msg=("The passwords do not match!"),
+        )
+      
+    user = 
+    if user is None or not user.check_password(password):
+          return render_template(
+            'register.html',
+            error_msg=("Authentication failed" ),
+          )
+    
+    flask_login.login_user(user, remember=remember)
+    return redirect(url_for('home'))
     
 
 if __name__ == '__main__':

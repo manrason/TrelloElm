@@ -9,6 +9,13 @@
     <h1>
       <a href="/">My Social Network</a>
     </h1>
+      <nav>
+        {% if current_user.is_authenticated %}
+          <div><span>{{ current_user.email }}</span>
+          &ndash;<a href="{{ url_for('logout') }}">Log out</a>
+        </div>
+        {% endif %}
+    </nav>
       {% block content %}
       {% endblock content %}
   </body>
