@@ -1,7 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, session, jsonify
 import flask_login
 
-import models.user
+from models.user import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -9,7 +9,7 @@ app.config['SECRET_KEY'] = 'secret!'
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_get'
-
+login_manager.user_loader(User.get)
 
 @app.route("/")
 def hello():
