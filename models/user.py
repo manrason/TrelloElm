@@ -26,12 +26,18 @@ class User(flask_login.UserMixin):
             ''', (self.name, self.email, self.id)
             )
 
-
+    def __repr__(self):
+        if self.id is None:
+            return "[User %s<%s> - not in DB]"%(self.name, self.email)
+        return "[User %s<%s> - id: %d]"%(self.name, self.email, self.id)
+        
+        
     @classmethod
     def get(cls, cursor, id):
         cursor.execute('''
             SELECT * FROM users WHERE id = ?
         ''', id)
+
         res = cursor.fetchone()
         if res is None:
             return None

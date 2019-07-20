@@ -20,47 +20,9 @@ def login():
     session['login'] = request.json['login']
     return "logged in as " + session['login']
 
-@app.route("/logout", methods=['POST'])
-def logout():
-    try:
-        login = session.pop('login')
-        socketio.emit('event', {
-          "tag": "logout",
-          "login": session['login'],
-        }, broadcast=True)
-        return "logged out"
-    except KeyError:
-        return "not logged in", 400
-        
 
-@socketio.on('connect')
-def handle_dream():
-    if 'login' not in session :
-        raise ConnectionRefusedError('unauthorized!')
-
-    emit('event', {
-      "tag": "login",
-      "login": session['login'],
-    }, broadcast=True)
-
-
-@socketio.on('dream')
-def handle_dream(dream):
-    emit('event', {
-      "tag": "dream",
-      "from" : session['login'],
-      "content": dream,
-    },
-    broadcast=True)
-    
-@socketio.on('disconnect') 
-def handle_disconnect():
-    emit('event', {
-      "tag": "loggout",
-      "login": session['login'],
-    }, broadcast=True)
 
     
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    app.run(debug=True)
