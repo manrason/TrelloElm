@@ -16,11 +16,21 @@ def hello():
   return send_from_directory('static', 'index.html')
 
 @app.route("/login", methods=['POST'])
-def login():
-    session['login'] = request.json['login']
-    return "logged in as " + session['login']
+def login_post():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    remember = request.form.get('remember_me')
+    if not email or not password:
+        flash("Please provide your email and your password.")
+        return render_template('login.html', error_msg=("Please provide your email and your password." )
 
 
+    user = User.query.get(email)
+    if user is None or not user.check_password(password):
+
+@app.route('/login', methods=['GET'])
+def login_get():
+    return flask.render_template('login.html')
 
     
 

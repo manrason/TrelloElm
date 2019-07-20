@@ -5,9 +5,15 @@ class User(flask_login.UserMixin):
     def __init__(self, name, email, password, id=None):
         self.name = name
         self.email = email
-        self.password_hash = generate_password_hash(password)
+        self.set_password(password)
         self.id = id
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+        
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
     def save(self, cursor):
         if self.id is None:
             cursor.execute('''

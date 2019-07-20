@@ -16,8 +16,8 @@ cur = db.cursor()
 User.create_table(cur)
 
 users = [
-    User("Ford", "ford@betelgeuse.star"),
-    User("Arthur", "arthur@earth.planet"),
+    User("Ford", "ford@betelgeuse.star", "12345"),
+    User("Arthur", "arthur@earth.planet", "12345"),
 ]
 
 for user in users:
@@ -25,7 +25,9 @@ for user in users:
 
 db.commit()
 
-print("The following users has been added to the DB:")
+print("The following users has been added to the DB"
+      " (all the passwords are 12345):")
+
 for user in users:
     # uses the magic __repr__ method
     print(user)
