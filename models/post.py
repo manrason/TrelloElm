@@ -1,12 +1,10 @@
 import datetime
 
 class Post:
-    def __init__(self, content, author_id, timestamp, rowid):
+    def __init__(self, content, author_id):
         self.content = content
         self.author_id = author_id
-        self.timestamp = timestamp
-        
-        self._rowid = rowid
+        self.timestamp = datetime.datetime.now().timestamp()
 
     def insert(self, cursor):
         cursor.execute('''
@@ -19,51 +17,13 @@ class Post:
           ( ?, ?, ?)
         ''', (self.content, self.author_id, self.timestamp)
         )
-        self._rowid = cursor.lastrowid
         
-    def update(self, cursor):
-        if self._rowid is None:
-            raise ValueError("can not update a post which is not in the DB")
-            
-        cursor.exectue('''
-          UPDATE posts
-          SET content = ?
-          WHERE email = ?
-        ''', (self.content, self._rowid)
-        )
-
     def __repr__(self):
         return "[Post by %s at %s: %s]"%(
             self.author_id, 
             str(datetime.datetime.fromtimestamp(self.timestamp)),
             self.content[:50]
         )
-    
-    @classmethod
-    def new(cls, content, author_id):
-        return cls(
-            content=content,
-            author_id=author_id,
-            rowid=None,
-            timestamp=datetime.datetime.now().timestamp(),
-        )
-
-    def _from_row(cls, row):
-        return User(
-          content=row['content'],
-          author_id=row['author_id'],
-          rowid=row['rowid'],
-          timestamp=row['timestamp']
-        )
-
-    @classmethod
-    def getAll(cls, cursor):
-      cursor.execute('''
-          SELECT * FROM posts
-      ''')
-      return [ User._from_row(row) for row in cursor.fetchall() ]
-
-    
 
     @classmethod
     def create_table(cls, cursor):
@@ -77,3 +37,20 @@ class Post:
         , FOREIGN KEY (author_id) REFERENCES users(email)
         )''')
 
+class PostForPrinting:
+    def __init__(self, author_name, date, content):
+        self.author_name = author_name
+        self.date = date
+        self.content = content
+   
+    @classmethod
+    def getAll(cls, cursor):
+    
+        @classmethod
+    def getAll(cls, cursor):
+      cursor.execute('''
+          SELECT name, content timestamp 
+          FROM posts
+          JOIN users ON 
+      ''')
+      return [ User._from_row(row) for row in cursor.fetchall() ]

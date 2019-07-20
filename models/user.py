@@ -33,14 +33,6 @@ class User(flask_login.UserMixin):
         ''', (self.name, self.email, self.password_hash)
         )
         
-    def update(self, cursor):
-        cursor.exectue('''
-          UPDATE users
-          SET name = ?, password_hash = ?
-          WHERE email = ?
-        ''', (self.name, self.password_hash, self.email)
-        )
-
     def __repr__(self):
         return "[User %s<%s>]"%(self.name, self.email)
         
