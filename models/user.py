@@ -51,7 +51,7 @@ class User(flask_login.UserMixin):
     def getById(cls, cursor, id):
         cursor.execute('''
             SELECT * FROM users WHERE id = ?
-        ''', id)
+        ''', (id,))
 
         res = cursor.fetchone()
         if res is None:

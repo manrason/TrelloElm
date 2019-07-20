@@ -40,7 +40,12 @@ def close_connection(exception):
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_get'
-login_manager.user_loader(User.getById)
+
+@login_manager.user_loader
+def load_user(id):
+    db = get_db()
+    cur = db.cursor()
+    return User.getById(cur, id)
 
 @app.route("/")
 @flask_login.login_required
@@ -49,13 +54,15 @@ def home():
 
 @app.route("/login", methods=['POST'])
 def login_post():
+    print("hello")
     email = request.form.get('email')
     password = request.form.get('password')
     remember = request.form.get('remember_me')
     if not email or not password:
+        print("pass")
         return render_template(
           'login.html',
-          error_msg=("Please provide your email and your password."),
+          error_msg="Please provide your email and your password.",
         )
 
     db = get_db()
@@ -63,12 +70,14 @@ def login_post():
     
     user = User.getByEmail(cur, email)
     if user is None or not user.check_password(password):
-          return render_template(
-            'login.html',
-            error_msg=("Authentication failed" ),
-          )
-    
+        print("hi")
+        return render_template(
+          'login.html',
+          error_msg="Authentication failed",
+        )
+    print("logg in")
     flask_login.login_user(user, remember=remember)
+    print(flask_login.current_user)
     return redirect(url_for('home'))
 
 @app.route('/login', methods=['GET'])
