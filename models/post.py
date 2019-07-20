@@ -1,47 +1,41 @@
 import flask_login
+import datetime
+
 
 class Post:
-    def __init__(self, content):
-        self.name = name
-        self.email = email
-        if password_hash is None:
-            if password is None:
-                raise ValueError('password and password_hash can not both be None')
-            self.set_password(password)
-        else:
-            self.password_hash = password_hash
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+    def __init__(self, content, author_id):
+        self.content = content
+        self.author_id = author_id
+        self.timestamp = datetime.datetime().now().timestamp()
         
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
-    def get_id(self):
-        return self.email
+        self._rowid = None
 
     def insert(self, cursor):
         cursor.execute('''
-          INSERT INTO users 
-          ( name
-          , email
-          , password_hash
+          INSERT INTO posts 
+          ( content
+          , author_id
+          , timestamp
           )
           VALUES 
           ( ?, ?, ?)
-        ''', (self.name, self.email, self.password_hash)
+        ''', (self.content, self.author_id, self.timestamp)
         )
+        self._rowid = cursor.lastrowid
         
     def update(self, cursor):
+        if self._rowid is None:
+            raise ValueError("can not update a post which is not in the DB")
+            
         cursor.exectue('''
-          UPDATE users
-          SET name = ?, password_hash = ?
+          UPDATE posts
+          SET content = ?
           WHERE email = ?
-        ''', (self.name, self.password_hash, self.email)
+        ''', (self.content, self._rowid)
         )
 
     def __repr__(self):
-        return "[User %s<%s>]"%(self.name, self.email)
+        return "[Post Author%s: %s]"%(self.name, self.email)
         
         
     @classmethod
