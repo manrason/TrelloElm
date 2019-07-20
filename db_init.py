@@ -1,6 +1,6 @@
 import sqlite3
 
-from user import User
+from models.user import User
 
 
 def make_dicts(cursor, row):
@@ -8,7 +8,7 @@ def make_dicts(cursor, row):
                 for idx, value in enumerate(row))
 
   
-db = sqlite3.connect(DATABASE)
+db = sqlite3.connect('.data/db.sqlite')
 db.row_factory = make_dicts
 
 cur = db.cursor()
@@ -16,7 +16,17 @@ cur = db.cursor()
 User.create_table(cur)
 
 users = [
-   User("Ford", "ford@betelgeuse.star"),
-   User("Ford", "ford@betelgeuse.star"),
+    User("Ford", "ford@betelgeuse.star"),
+    User("Arthur", "arthur@earth.planet"),
 ]
-user2.save()
+
+for user in users:
+    user.save(cur)
+
+db.commit()
+
+print("The following users has been added to the DB:")
+for user in users:
+    # uses the magic __repr__ method
+    print(user)
+    

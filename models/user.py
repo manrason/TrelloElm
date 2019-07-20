@@ -46,12 +46,12 @@ class User(flask_login.UserMixin):
 
     @classmethod
     def create_table(cls, cursor):
-        cursor.execute('DROP TABLE IF EXISTS shortcuts')
+        cursor.execute('DROP TABLE IF EXISTS users')
 
         cursor.execute('''
-        CREATE TABLE users
-        ( id INT PRIMARY KEY NOT NULL AUTO_INCREMENT
-        , name TEXT NOT NULL
-        , email TEXT NOT NULL
+        CREATE TABLE users        ( 
+          id INT PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL
         )''')
 
