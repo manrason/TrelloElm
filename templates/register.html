@@ -3,6 +3,12 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
+{% if error_msg %}
+<div class="error">
+  {{ error_msg }}
+</div>
+{% endif %}
+
 Register:
 
 <form method="POST" action="/login">

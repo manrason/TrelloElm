@@ -45,7 +45,7 @@ def login_get():
   
 @app.route('/register', methods=['GET'])
 def register_get():
-    return render_template('login.html')
+    return render_template('register.html')
 
 @app.route("/register", methods=['POST'])
 def register_post():
@@ -56,25 +56,26 @@ def register_post():
     if not email or not name or not password1 or not password2:
         return render_template(
           'register.html',
-          error_msg=("Please provide your email, name and password."),
+          error_msg="Please provide your email, name and password.",
         )
 
 
     if password1 != password2:
         return render_template(
           'register.html',
-          error_msg=("The passwords do not match!"),
+          error_msg="The passwords do not match!",
         )
       
-    user = 
-    if user is None or not user.check_password(password):
-          return render_template(
-            'register.html',
-            error_msg=("Authentication failed" ),
-          )
+    user = User(name=name, email=email, password=password1)
+    try:
+        user.save()
+    except sqlite.IntegrityError:
+        return render_template(
+          'register.html',
+          error_msg="This is email is already registered.",
+        )
     
-    flask_login.login_user(user, remember=remember)
-    return redirect(url_for('home'))
+    return redirect(url_for('login_get'))
     
 
 if __name__ == '__main__':
