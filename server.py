@@ -9,9 +9,10 @@ app.config['SECRET_KEY'] = 'secret!'
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_get'
-login_manager.user_loader(User.get)
+login_manager.user_loader(User.getById)
 
 @app.route("/")
+@flask_login.login_required
 def hello():
   return send_from_directory('static', 'index.html')
 
