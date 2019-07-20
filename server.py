@@ -1,11 +1,42 @@
-from flask import Flask, render_template, send_from_directory, request, session, jsonify
+from flask import Flask, render_template, request, session, g, redirect, url_for
 import flask_login
-
+import sqlite3
 from models.user import User
 
+DATABASE = '.data/db.sqlite'
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.secret_key = 'mysecret!'
 
+##############################################################################
+#                BOILERPLATE CODE (you can essentially ignore this)          #
+##############################################################################
+
+def get_db():
+    """Boilerplate code to open a database
+    connection with SQLite3 and Flask.
+    Note that `g` is imported from the
+    `flask` module."""
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = make_dicts
+    return db
+
+def make_dicts(cursor, row):
+    return dict((cursor.description[idx][0], value)
+                for idx, value in enumerate(row))
+
+@app.teardown_appcontext
+def close_connection(exception):
+    """Boilerplate code: function called each time 
+    the request is over."""
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+        
+##############################################################################
+#                APPLICATION CODE (read from this point!)                    #
+##############################################################################
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_get'
@@ -13,7 +44,7 @@ login_manager.user_loader(User.getById)
 
 @app.route("/")
 @flask_login.login_required
-def hello():
+def home():
   return send_from_directory('static', 'index.html')
 
 @app.route("/login", methods=['POST'])
@@ -27,8 +58,10 @@ def login_post():
           error_msg=("Please provide your email and your password."),
         )
 
-
-    user = User.getByEmail(email)
+    db = get_db()
+    cur = db.cursor()
+    
+    user = User.getByEmail(cur, email)
     if user is None or not user.check_password(password):
           return render_template(
             'login.html',
@@ -67,8 +100,10 @@ def register_post():
         )
       
     user = User(name=name, email=email, password=password1)
+    db = get_db()
+    cur = db.cursor()
     try:
-        user.save()
+        user.save(cur)
     except sqlite.IntegrityError:
         return render_template(
           'register.html',

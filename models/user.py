@@ -2,10 +2,15 @@ import flask_login
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(flask_login.UserMixin):
-    def __init__(self, name, email, password, id=None):
+    def __init__(self, name, email, password=None, id=None, password_hash=None):
         self.name = name
         self.email = email
-        self.set_password(password)
+        if password_hash is None:
+            if password is None:
+                raise ValueError('password and password_hash can not both be None')
+            self.set_password(password)
+        else:
+            self.password_hash = password_hash
         self.id = id
 
     def set_password(self, password):
@@ -60,10 +65,10 @@ class User(flask_login.UserMixin):
         )
 
     @classmethod
-    def getById(cls, cursor, email):
+    def getByEmail(cls, cursor, email):
         cursor.execute('''
             SELECT * FROM users WHERE email = ?
-        ''', email)
+        ''', (email,))
 
         res = cursor.fetchone()
         if res is None:
