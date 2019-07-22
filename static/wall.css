@@ -1,22 +1,28 @@
 #main-content {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(11, 1fr);
+  height: calc(100vh - 78px);
+  
 }
 
 #user-list {
   grid-column: 9 / span 3;
-    
+  grid-row: 1/1;
+  
+  
 }
 
 #posts {
   grid-column: 1/ span 8;
+  grid-row: 1/1;
+  
+    
 }
 
 #post-list {
-  grid-column: 1/ span 8;
-  grid-row: 2/span 2;
+    
 }
 
 #post-form {
-  grid-column: 1/ span 8;
+    
 }
