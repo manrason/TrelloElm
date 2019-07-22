@@ -36,7 +36,7 @@ class User:
         , password_hash TEXT NOT NULL
         , email TEXT NOT NULL PRIMARY KEY
         )''')
-   
+
 class UserForLogin(flask_login.UserMixin):
     def __init__(self, row):
         self.email = row['email']

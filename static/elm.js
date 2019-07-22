@@ -6078,8 +6078,9 @@ var author$project$Register$Password1Updated = function (a) {
 var author$project$Register$Password2Updated = function (a) {
 	return {$: 'Password2Updated', a: a};
 };
+var elm$core$Basics$neq = _Utils_notEqual;
 var author$project$Register$isFormValid = function (model) {
-	return _Utils_eq(model.password1, model.password2) && _Utils_eq(model.emailStatus, author$project$Register$Free);
+	return _Utils_eq(model.passwordCheck, author$project$Register$PasswordsMatch) && ((model.password1 !== '') && _Utils_eq(model.emailStatus, author$project$Register$Free));
 };
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$succeed = _Json_succeed;

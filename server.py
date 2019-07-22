@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, g, redirect, url_for
+from flask import Flask, render_template, request, session, g, redirect, url_for, jsonify
 import flask_login
 import sqlite3
 
@@ -129,6 +129,16 @@ def register_post():
     
     return redirect(url_for('login_get'))
 
+@app.route('/is-email-used/<email>')
+def is_email_used(email):
+    db = get_db()
+    cur = db.cursor()
+    
+    user = UserForLogin.getByEmail(cur, email)
+    free = user is None
+        
+    return jsonify({"email": email, "free": free})
+    
 @app.route('/logout', methods=['GET'])
 @flask_login.login_required
 def logout():

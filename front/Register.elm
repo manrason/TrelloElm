@@ -65,7 +65,9 @@ initialModel =
 
 isFormValid : Model -> Bool
 isFormValid model =
-    model.password1 == model.password2 && model.emailStatus == Free
+    model.passwordCheck == PasswordsMatch 
+    && model.password1 /= ""
+    && model.emailStatus == Free
 
 
 getTestEmail : String -> Cmd Msg
