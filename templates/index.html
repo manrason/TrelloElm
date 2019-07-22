@@ -9,10 +9,6 @@
 {% block content %}
 <main id="main-content">
 
-<form action="/posts/" method="POST" id="post-form">
-  <input name="content" placeholder="Say something nice!" />
-  <input type="submit" />
-</form>
 
 
 <section id="user-list">
@@ -24,14 +20,22 @@
   </ul>
 </section>
 
-<section id="post-list">
-  <ul>
-  {% for post in posts %}
-      <li>{{ post.author_name }}, at {{ post.date }} said: <br/>
-        {{ post.content }}
-      </li>
-  {% endfor %}
-  </ul>
-</section>  
-</main>
+  
+<section id="posts">
+  <form action="/posts/" method="POST" id="post-form">
+    <input name="content" placeholder="Say something nice!" />
+    <input type="submit" />
+  </form>
+
+  <section id="post-list">
+    <ul>
+    {% for post in posts %}
+        <li>{{ post.author_name }}, at {{ post.date }} said: <br/>
+          {{ post.content }}
+        </li>
+    {% endfor %}
+    </ul>
+  </section>  
+
+  </main>
 {% endblock %}
