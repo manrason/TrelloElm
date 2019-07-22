@@ -43,5 +43,10 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
 }
 
 .status.error {
-  color : 
+  color : red; 
 }
+
+.status.warning {
+  color : orange;
+}
+

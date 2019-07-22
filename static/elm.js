@@ -4586,9 +4586,9 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$NotAnEmail = {$: 'NotAnEmail'};
-var author$project$Main$Password1NotDone = {$: 'Password1NotDone'};
-var author$project$Main$initialModel = {email: '', emailStatus: author$project$Main$NotAnEmail, password1: '', password2: '', passwordCheck: author$project$Main$Password1NotDone};
+var author$project$Register$NotAnEmail = {$: 'NotAnEmail'};
+var author$project$Register$Password1NotDone = {$: 'Password1NotDone'};
+var author$project$Register$initialModel = {email: '', emailStatus: author$project$Register$NotAnEmail, password1: '', password2: '', passwordCheck: author$project$Register$Password1NotDone};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -5066,19 +5066,19 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var author$project$Main$subscriptions = function (_n0) {
+var author$project$Register$subscriptions = function (_n0) {
 	return elm$core$Platform$Sub$none;
 };
-var author$project$Main$AlreadyUsed = {$: 'AlreadyUsed'};
-var author$project$Main$Free = {$: 'Free'};
-var author$project$Main$Loading = {$: 'Loading'};
-var author$project$Main$PasswordsMatch = {$: 'PasswordsMatch'};
-var author$project$Main$PasswordsMismatch = {$: 'PasswordsMismatch'};
-var author$project$Main$ServerError = {$: 'ServerError'};
-var author$project$Main$GotTestEmail = function (a) {
+var author$project$Register$AlreadyUsed = {$: 'AlreadyUsed'};
+var author$project$Register$Free = {$: 'Free'};
+var author$project$Register$Loading = {$: 'Loading'};
+var author$project$Register$PasswordsMatch = {$: 'PasswordsMatch'};
+var author$project$Register$PasswordsMismatch = {$: 'PasswordsMismatch'};
+var author$project$Register$ServerError = {$: 'ServerError'};
+var author$project$Register$GotTestEmail = function (a) {
 	return {$: 'GotTestEmail', a: a};
 };
-var author$project$Main$TestEmail = F2(
+var author$project$Register$TestEmail = F2(
 	function (email, free) {
 		return {email: email, free: free};
 	});
@@ -5086,9 +5086,9 @@ var elm$json$Json$Decode$bool = _Json_decodeBool;
 var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$map2 = _Json_map2;
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$testEmailDecoder = A3(
+var author$project$Register$testEmailDecoder = A3(
 	elm$json$Json$Decode$map2,
-	author$project$Main$TestEmail,
+	author$project$Register$TestEmail,
 	A2(elm$json$Json$Decode$field, 'email', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'free', elm$json$Json$Decode$bool));
 var elm$core$Result$mapError = F2(
@@ -5972,10 +5972,10 @@ var elm$http$Http$get = function (r) {
 	return elm$http$Http$request(
 		{body: elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: elm$core$Maybe$Nothing, tracker: elm$core$Maybe$Nothing, url: r.url});
 };
-var author$project$Main$getTestEmail = function (email) {
+var author$project$Register$getTestEmail = function (email) {
 	return elm$http$Http$get(
 		{
-			expect: A2(elm$http$Http$expectJson, author$project$Main$GotTestEmail, author$project$Main$testEmailDecoder),
+			expect: A2(elm$http$Http$expectJson, author$project$Register$GotTestEmail, author$project$Register$testEmailDecoder),
 			url: '/is-email-used/' + email
 		});
 };
@@ -5994,7 +5994,7 @@ var elm$regex$Regex$Match = F4(
 	});
 var elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
 var elm$regex$Regex$never = _Regex_never;
-var author$project$Main$validEmail = A2(
+var author$project$Register$validEmail = A2(
 	elm$core$Maybe$withDefault,
 	elm$regex$Regex$never,
 	A2(
@@ -6002,25 +6002,25 @@ var author$project$Main$validEmail = A2(
 		{caseInsensitive: true, multiline: false},
 		'^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
 var elm$regex$Regex$contains = _Regex_contains;
-var author$project$Main$isValidEmail = function (email) {
-	return A2(elm$regex$Regex$contains, author$project$Main$validEmail, email);
+var author$project$Register$isValidEmail = function (email) {
+	return A2(elm$regex$Regex$contains, author$project$Register$validEmail, email);
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Main$update = F2(
+var author$project$Register$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'EmailUpdated':
 				var email = msg.a;
-				var ok = author$project$Main$isValidEmail(email);
+				var ok = author$project$Register$isValidEmail(email);
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							email: email,
-							emailStatus: ok ? author$project$Main$Loading : author$project$Main$NotAnEmail
+							emailStatus: ok ? author$project$Register$Loading : author$project$Register$NotAnEmail
 						}),
-					ok ? author$project$Main$getTestEmail(email) : elm$core$Platform$Cmd$none);
+					ok ? author$project$Register$getTestEmail(email) : elm$core$Platform$Cmd$none);
 			case 'Password1Updated':
 				var password1 = msg.a;
 				return _Utils_Tuple2(
@@ -6035,7 +6035,7 @@ var author$project$Main$update = F2(
 								model,
 								{
 									password1: password1,
-									passwordCheck: _Utils_eq(password1, model.password2) ? author$project$Main$PasswordsMatch : author$project$Main$PasswordsMismatch
+									passwordCheck: _Utils_eq(password1, model.password2) ? author$project$Register$PasswordsMatch : author$project$Register$PasswordsMismatch
 								});
 						}
 					}(),
@@ -6047,7 +6047,7 @@ var author$project$Main$update = F2(
 						model,
 						{
 							password2: password2,
-							passwordCheck: _Utils_eq(password2, model.password2) ? author$project$Main$PasswordsMatch : author$project$Main$PasswordsMismatch
+							passwordCheck: _Utils_eq(password2, model.password1) ? author$project$Register$PasswordsMatch : author$project$Register$PasswordsMismatch
 						}),
 					elm$core$Platform$Cmd$none);
 			default:
@@ -6057,29 +6057,29 @@ var author$project$Main$update = F2(
 						_Utils_eq(testEmail.email, model.email) ? _Utils_update(
 							model,
 							{
-								emailStatus: testEmail.free ? author$project$Main$Free : author$project$Main$AlreadyUsed
+								emailStatus: testEmail.free ? author$project$Register$Free : author$project$Register$AlreadyUsed
 							}) : model,
 						elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{emailStatus: author$project$Main$ServerError}),
+							{emailStatus: author$project$Register$ServerError}),
 						elm$core$Platform$Cmd$none);
 				}
 		}
 	});
-var author$project$Main$EmailUpdated = function (a) {
+var author$project$Register$EmailUpdated = function (a) {
 	return {$: 'EmailUpdated', a: a};
 };
-var author$project$Main$Password1Updated = function (a) {
+var author$project$Register$Password1Updated = function (a) {
 	return {$: 'Password1Updated', a: a};
 };
-var author$project$Main$Password2Updated = function (a) {
+var author$project$Register$Password2Updated = function (a) {
 	return {$: 'Password2Updated', a: a};
 };
-var author$project$Main$isFormValid = function (model) {
-	return _Utils_eq(model.password1, model.password2) && _Utils_eq(model.emailStatus, author$project$Main$Free);
+var author$project$Register$isFormValid = function (model) {
+	return _Utils_eq(model.password1, model.password2) && _Utils_eq(model.emailStatus, author$project$Register$Free);
 };
 var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$succeed = _Json_succeed;
@@ -6114,7 +6114,7 @@ var elm$html$Html$Attributes$href = function (url) {
 		'href',
 		_VirtualDom_noJavaScriptUri(url));
 };
-var author$project$Main$viewEmailStatus = function (emailStatus) {
+var author$project$Register$viewEmailStatus = function (emailStatus) {
 	switch (emailStatus.$) {
 		case 'NotAnEmail':
 			return A2(
@@ -6169,7 +6169,7 @@ var author$project$Main$viewEmailStatus = function (emailStatus) {
 						elm$html$Html$a,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$href('/login/')
+								elm$html$Html$Attributes$href('/login')
 							]),
 						_List_fromArray(
 							[
@@ -6189,7 +6189,7 @@ var author$project$Main$viewEmailStatus = function (emailStatus) {
 					]));
 	}
 };
-var author$project$Main$viewPasswordCheck = function (passwordCheck) {
+var author$project$Register$viewPasswordCheck = function (passwordCheck) {
 	switch (passwordCheck.$) {
 		case 'Password1NotDone':
 			return A2(
@@ -6280,7 +6280,7 @@ var elm$html$Html$Events$onInput = function (tagger) {
 			elm$html$Html$Events$alwaysStop,
 			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
-var author$project$Main$view = function (model) {
+var author$project$Register$view = function (model) {
 	return A2(
 		elm$html$Html$form,
 		_List_fromArray(
@@ -6304,10 +6304,10 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$Attributes$name('email'),
 								elm$html$Html$Attributes$type_('email'),
 								elm$html$Html$Attributes$value(model.email),
-								elm$html$Html$Events$onInput(author$project$Main$EmailUpdated)
+								elm$html$Html$Events$onInput(author$project$Register$EmailUpdated)
 							]),
 						_List_Nil),
-						author$project$Main$viewEmailStatus(model.emailStatus)
+						author$project$Register$viewEmailStatus(model.emailStatus)
 					])),
 				A2(
 				elm$html$Html$label,
@@ -6337,7 +6337,7 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$Attributes$name('password1'),
 								elm$html$Html$Attributes$type_('password'),
 								elm$html$Html$Attributes$value(model.password1),
-								elm$html$Html$Events$onInput(author$project$Main$Password1Updated)
+								elm$html$Html$Events$onInput(author$project$Register$Password1Updated)
 							]),
 						_List_Nil)
 					])),
@@ -6354,14 +6354,14 @@ var author$project$Main$view = function (model) {
 								elm$html$Html$Attributes$name('password2'),
 								elm$html$Html$Attributes$type_('password'),
 								elm$html$Html$Attributes$value(model.password2),
-								elm$html$Html$Events$onInput(author$project$Main$Password2Updated)
+								elm$html$Html$Events$onInput(author$project$Register$Password2Updated)
 							]),
 						_List_Nil),
-						author$project$Main$viewPasswordCheck(model.passwordCheck)
+						author$project$Register$viewPasswordCheck(model.passwordCheck)
 					])),
 				A2(
 				elm$html$Html$input,
-				author$project$Main$isFormValid(model) ? _List_fromArray(
+				author$project$Register$isFormValid(model) ? _List_fromArray(
 					[
 						elm$html$Html$Attributes$name(''),
 						elm$html$Html$Attributes$type_('submit'),
@@ -6592,14 +6592,14 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
-var author$project$Main$main = elm$browser$Browser$element(
+var author$project$Register$main = elm$browser$Browser$element(
 	{
 		init: function (_n0) {
-			return _Utils_Tuple2(author$project$Main$initialModel, elm$core$Platform$Cmd$none);
+			return _Utils_Tuple2(author$project$Register$initialModel, elm$core$Platform$Cmd$none);
 		},
-		subscriptions: author$project$Main$subscriptions,
-		update: author$project$Main$update,
-		view: author$project$Main$view
+		subscriptions: author$project$Register$subscriptions,
+		update: author$project$Register$update,
+		view: author$project$Register$view
 	});
-_Platform_export({'Main':{'init':author$project$Main$main(
+_Platform_export({'Register':{'init':author$project$Register$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));

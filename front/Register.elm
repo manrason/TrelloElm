@@ -1,4 +1,4 @@
-module Main exposing (main)
+module Register exposing (main)
 
 import Browser
 import Browser.Dom
@@ -129,7 +129,7 @@ update msg model =
             ( { model
                 | password2 = password2
                 , passwordCheck =
-                    if password2 == model.password2 then
+                    if password2 == model.password1 then
                         PasswordsMatch
 
                     else
@@ -210,7 +210,7 @@ viewEmailStatus emailStatus =
         AlreadyUsed ->
             span []
                [ span [class "status error"] [text "Email Already used..."],
-                 a [ href "/login/"] [ text "Do you want to log you in?"]
+                 a [ href "/login"] [ text "Do you want to log you in?"]
                 ]
        
         ServerError ->
