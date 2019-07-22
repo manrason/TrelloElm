@@ -7,9 +7,7 @@
 
 #user-list {
   grid-column: 9 / span 3;
-  grid-row: 1/1;
-  
-  
+  grid-row: 1/1; 
 }
 
 #posts {
@@ -18,9 +16,28 @@
   
     
 }
+ul#post-list {
+  list-style: none;
+  width:100%;
 
-#post-list {
-    
+  margin: auto;
+  margin-top: 10px;
+}
+
+.post-header {
+  background-color: red;
+  height: 20px;
+  width: 80%;
+  color: white;
+  display: flex;
+  display-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.post-content {
+  border: red 1px solid;
+  border-top: none;
 }
 
 #post-form {

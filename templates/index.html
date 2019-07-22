@@ -27,15 +27,23 @@
     <input type="submit" />
   </form>
 
-  <section id="post-list">
-    <ul>
-    {% for post in posts %}
-        <li>{{ post.author_name }}, at {{ post.date }} said: <br/>
-          {{ post.content }}
-        </li>
-    {% endfor %}
-    </ul>
-  </section>  
+  
+  <ul id="post-list">
+  {% for post in posts %}
+      <li class="post">
+        <div class="post-header">
+          <span class="post-author">
+            {{ post.author_name }}
+          </span>
+          <span class="post-date">at {{ post.date }}</span>
+        </div>
+        <div class="post-content">
+           {{ post.content }}
+        </div>
+      </li>
+  {% endfor %}
+  </ul>
+  
 </section>
   
 </main>
