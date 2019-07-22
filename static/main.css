@@ -1,16 +1,22 @@
 body, html {
   font-family: Helvetica;
+  margin: 0;
+  margin-top : 0;
+  height: 100%;
 }
 
-a { text-decoration: none;}
+a { 
+  text-decoration: none;
+  color: inherit;
+}
 #header {
   margin: 0;
   height : 78px;
   background-color: red;
   width: 100%;
   color: white;
-  padding : 5px;
 }
-#header a {
-  color: white;
+#header h1 {
+  margin: 0px;
+  
 }
