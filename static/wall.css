@@ -24,13 +24,19 @@ ul#post-list {
   margin-top: 10px;
 }
 
+#post-list .post {
+  display: block;
+  width: 80%;
+  margin-bottom: 25px;
+  
+}
+
 .post-header {
   background-color: red;
   height: 20px;
-  width: 80%;
   color: white;
   display: flex;
-  display-direction: row;
+  flex-direction: row;
   justify-content: space-between;
   padding: 5px;
 }
@@ -41,5 +47,30 @@ ul#post-list {
 }
 
 #post-form {
-    
+  display: flex;
+  flex-direction:row;
+}
+
+#post-form input[type=text] {
+  padding: 10px;
+  border-radius: 0px;
+  border: #ffa7a7 solid 1px;
+  height :20px;
+  display: block;
+  width: 80%;
+}
+
+#post-form input[type=text]:focus{
+  border-color: red;
+}
+
+#post-form input[type=submit]{
+  padding: 10px;
+  border-radius: 0px;
+  border: none;
+  background-color: red;
+  height :22px;
+  display: block;
+  color: white;
+  font-size: 120%;
 }
