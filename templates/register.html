@@ -2,6 +2,10 @@
 
 {% block title %}Log in{% endblock %}
 
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="/static/form-style.css" />
+{% endblock %}
+
 {% block content %}
 {% if error_msg %}
 <div class="error">
@@ -10,16 +14,19 @@
 {% endif %}
   
 
-  <form method="POST" action="/register">
+
+<h2>
+  Register
+</h2>
+<div id="elmapp">
+  {# Default to simple HTML form if JS is not enabled #}
+  <form method="POST" action="/register" class="register-form">
       <label>Email: <input type="email" name="email" /></label>
       <label>Name: <input type="text" name="name" /></label>
       <label>Password: <input type="password" name="password1" /></label>
       <label>Repeat: <input type="password" name="password2" /></label>
       <input type="submit" name="" value="Send" />
   </form>
-
-Register:
-<div id="elmapp">
 </div>
 <script src="static/elm.js"></script>
 <script>

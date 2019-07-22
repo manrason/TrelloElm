@@ -6249,7 +6249,7 @@ var author$project$Register$view = function (model) {
 						elm$html$Html$Attributes$name(''),
 						elm$html$Html$Attributes$type_('submit'),
 						elm$html$Html$Attributes$value('Correct errors to register'),
-						elm$html$Html$Attributes$disabled(false)
+						elm$html$Html$Attributes$disabled(true)
 					]),
 				_List_Nil)
 			]));

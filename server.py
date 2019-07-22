@@ -119,7 +119,7 @@ def register_post():
     cur = db.cursor()
     try:
         user.insert(cur)
-    except sqlite.IntegrityError:
+    except sqlite3.IntegrityError:
         return render_template(
           'register.html',
           error_msg="This is email is already registered.",

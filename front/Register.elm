@@ -188,7 +188,7 @@ view model =
                 [ name "", type_ "submit", value "Register" ]
 
              else
-                [ name "", type_ "submit", value "Correct errors to register", disabled False ]
+                [ name "", type_ "submit", value "Correct errors to register", disabled True ]
             )
             []
         ]

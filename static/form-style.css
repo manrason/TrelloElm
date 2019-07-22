@@ -1,0 +1,39 @@
+.register-form {
+  display: flex;
+  flex-direction: column;
+  border: 1px grey solid;
+  border-radius: 20px;
+  padding: 20px;
+  min-width: 350px;
+}
+input[type=text], input[type=email], input[type=password] {
+  display: flex;
+  padding: 10px;
+  border-radius: 10px;
+  border: #ffa7a7 solid 1px;
+}
+
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+  border-color: red;
+}
+.register-form > * {
+  margin: 20px 0;
+}
+
+.register-form input[type=submit] {
+  background-color: #ffa7a7;
+  border: 0px;
+  border-radius: 20px;
+  padding: 20px;
+  font-size:200%;
+  color: red;
+}
+
+.register-form input[type=submit]:disabled {
+  background-color: #aaa;
+  border: 0px;
+  border-radius: 20px;
+  padding: 20px;
+  font-size:200%;
+  color: white;
+} 
