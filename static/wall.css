@@ -1,7 +1,7 @@
 #main-content {
   display: grid;
   grid-template-columns: repeat(11, 1fr);
-  height: calc(100vh - 78px);
+  height: calc(100vh - 86px);
   
 }
 
@@ -9,7 +9,8 @@
   grid-column: 9 / span 3;
   grid-row: 1/1;
   border-left: #ffa7a7 1px solid;
-  
+  overflow-y: scroll; 
+  overflox-x: hidden;
 }
 
 
@@ -27,18 +28,22 @@
 }
 #user-list > ul > li {
   border-bottom: #ffa7a7 solid 1px;
-  padding: 5p;
+  padding: 5px;
+  padding-left: 10px;
+  
 }
 
 #posts {
   grid-column: 1/ span 8;
   grid-row: 1/1;
   
-    
+   overflow-y: scroll; 
+   overflox-x: hidden;
 }
 ul#post-list {
   list-style: none;
-  width:100%;
+/*  width:100%;*/
+  display: block;
 
   margin: auto;
   margin-top: 10px;
