@@ -8,14 +8,24 @@
   {{ error_msg }}
 </div>
 {% endif %}
+  
+
+  <form method="POST" action="/register">
+      <label>Email: <input type="email" name="email" /></label>
+      <label>Name: <input type="text" name="name" /></label>
+      <label>Password: <input type="password" name="password1" /></label>
+      <label>Repeat: <input type="password" name="password2" /></label>
+      <input type="submit" name="" value="Send" />
+  </form>
 
 Register:
-
-<form method="POST" action="/register">
-    <label>Email: <input type="email" name="email" /></label>
-    <label>Name: <input type="text" name="name" /></label>
-    <label>Password: <input type="password" name="password1" /></label>
-    <label>Repeat: <input type="password" name="password2" /></label>
-    <input type="submit" name="" value="Send" />
-</form>
-{% endblock %}
+<div id="elmapp">
+</div>
+<script src="static/elm.js"></script>
+<script>
+      var app = Elm.Register.init({
+        node: document.getElementById('elmapp')
+      });
+</script>
+  
+  {% endblock %}
