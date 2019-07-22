@@ -1,4 +1,4 @@
-module Register exposing (main)
+module Main exposing (main)
 
 import Browser
 import Browser.Dom
@@ -41,7 +41,7 @@ type EmailStatus
 type PasswordCheck
     = Password1NotDone
     | PasswordsMatch
-    | PasswordsDontMatch
+    | PasswordsMismatch
 
 
 type alias Model =
@@ -65,9 +65,7 @@ initialModel =
 
 isFormValid : Model -> Bool
 isFormValid model =
-    model.passwordCheck == PasswordsMatch 
-    && model.password1 /= ""
-    && model.emailStatus == Free
+    model.password1 == model.password2 && model.emailStatus == Free
 
 
 getTestEmail : String -> Cmd Msg
@@ -122,7 +120,7 @@ update msg model =
                                 PasswordsMatch
 
                             else
-                                PasswordsDontMatch
+                                PasswordsMismatch
                     }
             , Cmd.none
             )
@@ -135,7 +133,7 @@ update msg model =
                         PasswordsMatch
 
                     else
-                        PasswordsDontMatch
+                        PasswordsMismatch
               }
             , Cmd.none
             )
@@ -169,6 +167,7 @@ view model =
             [ text "Email: "
             , input [ name "email", type_ "email", value model.email, onInput EmailUpdated ]
                 []
+            , viewEmailStatus model.emailStatus
             ]
         , label []
             [ text "Name: "
@@ -184,6 +183,7 @@ view model =
             [ text "Repeat: "
             , input [ name "password2", type_ "password", value model.password2, onInput Password2Updated ]
                 []
+            , viewPasswordCheck model.passwordCheck
             ]
         , input
             (if isFormValid model then
@@ -194,6 +194,39 @@ view model =
             )
             []
         ]
+
+viewEmailStatus : EmailStatus -> Html Msg
+viewEmailStatus emailStatus =
+    case emailStatus of
+        NotAnEmail ->
+            span [class "status error"] [text "This is not an email!"]
+        
+        Loading ->
+            span [class "status loading"] [text "..."]
+            
+        Free ->
+            span [class "status ok"] [text "✅"]
+        
+        AlreadyUsed ->
+            span []
+               [ span [class "status error"] [text "Email Already used..."],
+                 a [ href "/login/"] [ text "Do you want to log you in?"]
+                ]
+       
+        ServerError ->
+            span [class "status error"] [text "I can not speak with the server..."]
+            
+viewPasswordCheck: PasswordCheck -> Html Msg
+viewPasswordCheck passwordCheck =
+     case passwordCheck of
+         Password1NotDone ->
+             span [class "status warning"] [text "Fullfil the passwords fields!"]
+        
+         PasswordsMatch ->
+             span [class "status ok"] [text "✅"]
+         
+         PasswordsMismatch ->
+             span [class "status error"] [text "The passwords mismatch!"]
 
 
 main : Program () Model Msg

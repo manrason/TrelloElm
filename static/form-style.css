@@ -37,3 +37,11 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
   font-size:200%;
   color: white;
 } 
+
+.status {
+  font-size: 80%;
+}
+
+.status.error {
+  color : 
+}
