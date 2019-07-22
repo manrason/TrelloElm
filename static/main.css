@@ -1,0 +1,16 @@
+body, html {
+  font-family: Helvetica;
+}
+
+a { text-decoration: none;}
+#header {
+  margin: 0;
+  height : 78px;
+  background-color: red;
+  width: 100%;
+  color: white;
+  padding : 5px;
+}
+#header a {
+  color: white;
+}
