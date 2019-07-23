@@ -6,7 +6,7 @@ pip3 install --user  -r requirements.txt > /dev/null
 echo "Python deps grabbed!"
 
 mkdir -p .data
-python3 init_db.py
+python3 db_init.py
 
 echo ""
 if [ ! -f "/app/.local/bin/elm" ]; then
